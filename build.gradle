@@ -1,17 +1,36 @@
 plugins {
     id 'java'
+    id 'idea'
+
+    id "io.freefair.lombok" version "5.3.0"
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'net.uku3lig'
+version '0.0'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
+sourceCompatibility = targetCompatibility = 1.15
+
 dependencies {
+    // The holy JDA
+    implementation group: 'net.dv8tion', name: 'JDA', version: '4.2.0_214'
+
+    // === Logging ==
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+
+    //why do i have that ?
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    //lombok is gathered by plugin
 }
 
 test {
