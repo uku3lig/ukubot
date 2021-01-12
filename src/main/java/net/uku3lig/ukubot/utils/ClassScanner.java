@@ -21,16 +21,16 @@ public class ClassScanner {
     private static final Logger logger = LoggerFactory.getLogger(ClassScanner.class);
 
     public static Set<Command> findCommands() {
-        return findSubtypes("net.uku3lig.ukubot.commands", Command.class);
+        return findSubtypes(Command.class);
     }
 
     public static Collection<Subsystem> findSubsystems() {
-        return findSubtypes("net.uku3lig.ukubot.subsystems", Subsystem.class);
+        return findSubtypes(Subsystem.class);
     }
 
-    public static <T> Set<T> findSubtypes(String pkg, Class<T> parent) {
+    public static <T> Set<T> findSubtypes(Class<T> parent) {
         return new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(pkg))
+                .setUrls(ClasspathHelper.forPackage(parent.getPackageName()))
                 .setScanners(new SubTypesScanner()))
                 .getSubTypesOf(parent).parallelStream()
                 .filter(klass -> !(klass.isInterface() || Modifier.isAbstract(klass.getModifiers())))
