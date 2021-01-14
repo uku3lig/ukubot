@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.utils;
 
 import net.uku3lig.ukubot.commands.Command;
+import net.uku3lig.ukubot.console.ConsoleCommand;
 import net.uku3lig.ukubot.subsystems.Subsystem;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -24,8 +25,12 @@ public class ClassScanner {
         return findSubtypes(Command.class);
     }
 
-    public static Collection<Subsystem> findSubsystems() {
+    public static Set<Subsystem> findSubsystems() {
         return findSubtypes(Subsystem.class);
+    }
+
+    public static Set<ConsoleCommand> findConsoleCommands() {
+        return findSubtypes(ConsoleCommand.class);
     }
 
     public static <T> Set<T> findSubtypes(Class<T> parent) {
