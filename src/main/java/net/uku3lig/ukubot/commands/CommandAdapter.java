@@ -19,7 +19,8 @@ import java.util.Set;
 public class CommandAdapter extends ListenerAdapter {
     private static CommandAdapter instance = null;
     private final Logger logger = LoggerFactory.getLogger(CommandAdapter.class);
-    private final Set<Command> commands = new HashSet<>();
+    @Getter
+    private static final Set<Command> commands = new HashSet<>();
     public static final Map<Guild, String> prefixes = new HashMap<>();
     public static final String defaultPrefix = "?";
 

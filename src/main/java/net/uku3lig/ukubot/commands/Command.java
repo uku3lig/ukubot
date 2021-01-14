@@ -1,5 +1,7 @@
 package net.uku3lig.ukubot.commands;
 
+import net.dv8tion.jda.api.entities.Guild;
+
 import java.util.Collection;
 import java.util.Collections;
 
@@ -16,5 +18,13 @@ public abstract class Command {
 
     public IsSenderAllowed allowed() {
         return IsSenderAllowed.Default;
+    }
+
+    public String help() {
+        return CommandAdapter.defaultPrefix + command();
+    }
+
+    public String help(Guild g) {
+        return CommandAdapter.prefixes.get(g) + command();
     }
 }
