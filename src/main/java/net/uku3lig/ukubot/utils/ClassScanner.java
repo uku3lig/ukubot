@@ -36,7 +36,12 @@ public class ClassScanner {
                 .filter(klass -> !(klass.isInterface() || Modifier.isAbstract(klass.getModifiers())))
                 .map(klass -> {
                     try {
-                        Constructor<? extends T> c = klass.getConstructor();
+                        Constructor<? extends T> c;
+                        try {
+                            c = klass.getConstructor();
+                        } catch (Exception e) {
+                            c = klass.getDeclaredConstructor();
+                        }
                         c.setAccessible(true);
                         return c.newInstance();
                     } catch (ExceptionInInitializerError e) {
