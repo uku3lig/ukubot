@@ -10,7 +10,7 @@ public class CommandReceivedEvent extends GuildMessageReceivedEvent {
 
     public CommandReceivedEvent(GuildMessageReceivedEvent event) {
         super(event.getJDA(), event.getResponseNumber(), event.getMessage());
-        String[] splitMessage = event.getMessage().getContentRaw().split(" ");
+        String[] splitMessage = event.getMessage().getContentRaw().split("\\s+");
         args = Arrays.stream(splitMessage).skip(1).toArray(String[]::new);
         command = splitMessage[0].substring(CommandAdapter.prefixes.get(event.getGuild()).length());
     }
