@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.uku3lig.ukubot.Main;
+import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.utils.ClassScanner;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

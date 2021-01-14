@@ -1,4 +1,4 @@
-package net.uku3lig.ukubot;
+package net.uku3lig.ukubot.core;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
