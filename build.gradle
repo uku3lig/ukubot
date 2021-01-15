@@ -55,7 +55,3 @@ jar {
 build {
     dependsOn shadowJar
 }
-
-shadowJar {
-    minimize()
-}
