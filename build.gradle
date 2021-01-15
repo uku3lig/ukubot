@@ -3,6 +3,7 @@ plugins {
     id 'idea'
 
     id "io.freefair.lombok" version "5.3.0"
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group 'net.uku3lig'
@@ -48,4 +49,8 @@ jar {
                 'Main-Class': 'net.uku3lig.ukubot.core.Main'
         )
     }
+}
+
+build {
+    dependsOn shadowJar
 }
