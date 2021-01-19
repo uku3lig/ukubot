@@ -11,11 +11,15 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class CommandAdapter extends ListenerAdapter {
     private static CommandAdapter instance = null;
@@ -41,6 +45,11 @@ public class CommandAdapter extends ListenerAdapter {
                 .forEach(g -> prefixes.put(g, defaultPrefix)));
         commands.addAll(ClassScanner.findCommands());
         logger.info("Found %s commands".formatted(commands.size()));
+        if (!findNullCommands(commands).isEmpty()) {
+            String nullCommands = findNullCommands(commands).stream()
+                    .map(c -> c.getClass().getSimpleName()).collect(Collectors.joining(", "));
+            logger.error(nullCommands + " do NOT have a command set!");
+        }
         executor.scheduleWithFixedDelay(new CheckForGroups(), 0, 5, TimeUnit.SECONDS);
     }
 
@@ -87,6 +96,10 @@ public class CommandAdapter extends ListenerAdapter {
                                 t.start();
                             });
                 });
+    }
+
+    private Set<Command> findNullCommands(Set<Command> commands) {
+        return commands.stream().filter(command -> command.command() == null).collect(Collectors.toSet());
     }
 
     private void exceptionThrown(Thread thread, Throwable exception, TextChannel channel) {
