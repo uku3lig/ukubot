@@ -34,6 +34,7 @@ public class Main {
     public static final Color embedColor = Color.getHSBColor(1.37f, 1, 0.58f);
 
     public static void main(String[] args) {
+        ConsoleAdapter.getInstance().start();
         try {
             jda = JDABuilder.createDefault(getToken())
                     //add our adapters
@@ -51,7 +52,6 @@ public class Main {
         }
         try {
             jda.awaitReady();
-            ConsoleAdapter.getInstance().start();
             runWhenReady.forEach(c -> new Thread(() -> c.accept(jda)).start());
         } catch (InterruptedException ignored) {
         }
