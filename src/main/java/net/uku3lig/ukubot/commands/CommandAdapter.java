@@ -2,6 +2,7 @@ package net.uku3lig.ukubot.commands;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.uku3lig.ukubot.core.Main;
@@ -10,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class CommandAdapter extends ListenerAdapter {
     private static CommandAdapter instance = null;
@@ -25,7 +26,10 @@ public class CommandAdapter extends ListenerAdapter {
     public static final String defaultPrefix = "?";
 
     @Getter
-    private static final Map<Thread, Command> threads = new HashMap<>();
+    private static final Set<ThreadGroup> threadGroups = new HashSet<>();
+    private static final AtomicLong executedCommands = new AtomicLong(0);
+
+    private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public static CommandAdapter getInstance() {
         if (instance == null) instance = new CommandAdapter();
@@ -37,6 +41,7 @@ public class CommandAdapter extends ListenerAdapter {
                 .forEach(g -> prefixes.put(g, defaultPrefix)));
         commands.addAll(ClassScanner.findCommands());
         logger.info("Found %s commands".formatted(commands.size()));
+        executor.scheduleWithFixedDelay(new CheckForGroups(), 0, 5, TimeUnit.SECONDS);
     }
 
     @Override
@@ -65,15 +70,41 @@ public class CommandAdapter extends ListenerAdapter {
                             .formatted(event.getAuthor().getName(),
                                     command.command(),
                                     event.getChannel().getName()));
-                    try {
-                        Thread t = new Thread(() -> command.onCommandReceived(event));
-                        t.setName(command.getClass().getSimpleName() + " - " + LocalDateTime.now().toString());
-                        t.start();
-                        threads.put(t, command);
-                    } catch (Exception e) {
-                        event.getChannel().sendMessage("An unexpected error occurred").queue();
-                        e.printStackTrace();
-                    }
+
+                    //if does not contain thread group with command,
+                    if (threadGroups.stream().noneMatch(group -> group.getName().equals(command.command())))
+                        //add a new one
+                        threadGroups.add(new ThreadGroup(command.command()));
+
+                    //find all thread groups with command,
+                    threadGroups.stream().filter(group -> group.getName().equals(command.command()))
+                            //create new thread with parent, and runnable
+                            .forEach(group -> {
+                                Thread t = new Thread(group,
+                                        () -> command.onCommandReceived(event),
+                                        "CommandInstance" + executedCommands.getAndIncrement() + "-" + System.currentTimeMillis());
+                                t.setUncaughtExceptionHandler((thread, e) -> exceptionThrown(thread, e, event.getChannel()));
+                                t.start();
+                            });
                 });
+    }
+
+    private void exceptionThrown(Thread thread, Throwable exception, TextChannel channel) {
+        if (exception instanceof ThreadDeath) return;
+        channel.sendMessage("An unexpected error occurred").queue();
+        logger.error("Thread %s (%s) threw an exception".formatted(thread.getName(), thread.getThreadGroup().getName()));
+        exception.printStackTrace();
+    }
+
+    private static class CheckForGroups implements Runnable {
+        @Override
+        public void run() {
+            threadGroups.stream()
+                    .filter(group -> group.activeCount() == 0)
+                    .forEach(group -> {
+                        group.destroy();
+                        threadGroups.remove(group);
+                    });
+        }
     }
 }
