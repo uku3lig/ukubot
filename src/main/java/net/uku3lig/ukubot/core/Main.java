@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -28,6 +29,9 @@ public class Main {
     private static final Set<Consumer<JDA>> runWhenReady = new HashSet<>();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    public static final String botName = "UkuBot";
+    public static final Color embedColor = Color.getHSBColor(1.37f, 1, 0.58f);
 
     public static void main(String[] args) {
         try {
