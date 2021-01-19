@@ -3,12 +3,15 @@ package net.uku3lig.ukubot.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.uku3lig.ukubot.core.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
 public abstract class Command {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public boolean enabled = true;
 
     public abstract String command();
