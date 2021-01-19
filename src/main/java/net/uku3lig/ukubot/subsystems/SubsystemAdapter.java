@@ -1,5 +1,6 @@
 package net.uku3lig.ukubot.subsystems;
 
+import lombok.Getter;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.uku3lig.ukubot.utils.ClassScanner;
@@ -11,7 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SubsystemAdapter implements EventListener {
-    private final Set<Subsystem> subsystems = new HashSet<>();
+    @Getter
+    private static final Set<Subsystem> subsystems = new HashSet<>();
     private static SubsystemAdapter instance = null;
     private static final Logger logger = LoggerFactory.getLogger(SubsystemAdapter.class);
 
