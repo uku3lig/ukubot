@@ -1,7 +1,10 @@
 package net.uku3lig.ukubot.commands;
 
-import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.uku3lig.ukubot.core.Main;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -9,6 +12,8 @@ public abstract class Command {
     public boolean enabled = true;
 
     public abstract String command();
+
+    public abstract String description();
 
     public abstract void onCommandReceived(CommandReceivedEvent event);
 
@@ -20,11 +25,30 @@ public abstract class Command {
         return IsSenderAllowed.Default;
     }
 
-    public String help() {
-        return CommandAdapter.defaultPrefix + command();
-    }
+    /**
+     * Help syntax:
+     * <ul>
+     *     <li><code>[param]</code>: optional parameter</li>
+     *     <li><code>&lt;param&gt;</code>: mandatory parameter</li>
+     *     <li><code>("defined arg" + list of params)</code>: way of a doing a command (ex: <code>rr (add &lt;name>)</code>)</li>
+     *     <li><code>(part) <b>|</b> (part)</code>: separator between the ways</li>
+     * </ul>
+     * Example:
+     * <code>reddit (search &lt;query> [subreddit]) | (random [subreddit]) | (info &lt;subreddit>)</code>
+     * @return The command's help, <b>WITHOUT THE PREFIX</b>.
+     */
+    public abstract String help();
 
-    public String help(Guild g) {
-        return CommandAdapter.prefixes.get(g) + command();
+    public void sendHelp(TextChannel c) {
+        String desc = "%s\n\nUsage: `%s%s`"
+                .formatted(description(), CommandAdapter.prefixes.get(c.getGuild()), help());
+        if (!aliases().isEmpty()) desc += "\nAliases: " + String.join(", ", aliases());
+        EmbedBuilder builder = new EmbedBuilder()
+                .setAuthor(Main.botName)
+                .setColor(Main.embedColor)
+                .setTitle("Help: %s".formatted(command()))
+                .setDescription(desc)
+                .setTimestamp(LocalDateTime.now());
+        c.sendMessage(builder.build()).queue();
     }
 }
