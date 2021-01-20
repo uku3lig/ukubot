@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class CommandAdapter extends ListenerAdapter {
     private static CommandAdapter instance = null;
-    private final Logger logger = LoggerFactory.getLogger(CommandAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommandAdapter.class);
     @Getter
     private static final Set<Command> commands = new HashSet<>();
     public static final Map<Guild, String> prefixes = new HashMap<>();
@@ -35,6 +35,8 @@ public class CommandAdapter extends ListenerAdapter {
 
     private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
+
+
     public static CommandAdapter getInstance() {
         if (instance == null) instance = new CommandAdapter();
         return instance;
@@ -45,8 +47,8 @@ public class CommandAdapter extends ListenerAdapter {
                 .forEach(g -> prefixes.put(g, defaultPrefix)));
         commands.addAll(ClassScanner.findCommands());
         logger.info("Found %s commands".formatted(commands.size()));
-        if (!findNullCommands(commands).isEmpty()) {
-            String nullCommands = findNullCommands(commands).stream()
+        if (!findNullCommands().isEmpty()) {
+            String nullCommands = findNullCommands().stream()
                     .map(c -> c.getClass().getSimpleName()).collect(Collectors.joining(", "));
             logger.error(nullCommands + " do NOT have a command set!");
         }
@@ -98,8 +100,8 @@ public class CommandAdapter extends ListenerAdapter {
                 });
     }
 
-    private Set<Command> findNullCommands(Set<Command> commands) {
-        return commands.stream().filter(command -> command.command() == null).collect(Collectors.toSet());
+    private Set<Command> findNullCommands() {
+        return CommandAdapter.commands.stream().filter(command -> command.command() == null).collect(Collectors.toSet());
     }
 
     private void exceptionThrown(Thread thread, Throwable exception, TextChannel channel) {

@@ -34,8 +34,8 @@ public class ConsoleAdapter implements Runnable {
         consoleScanner = new BufferedReader(new InputStreamReader(System.in));
         commands.addAll(ClassScanner.findConsoleCommands());
         logger.info("Found %s console commands".formatted(commands.size()));
-        if (!findNullCommands(commands).isEmpty()) {
-            String nullCommands = findNullCommands(commands).stream()
+        if (!findNullCommands().isEmpty()) {
+            String nullCommands = findNullCommands().stream()
                     .map(c -> c.getClass().getSimpleName()).collect(Collectors.joining(", "));
             logger.error(nullCommands + " do NOT have a command set!");
         }
@@ -60,7 +60,7 @@ public class ConsoleAdapter implements Runnable {
                 });
     }
 
-    private Set<ConsoleCommand> findNullCommands(Set<ConsoleCommand> commands) {
-        return commands.stream().filter(command -> command.command() == null).collect(Collectors.toSet());
+    private Set<ConsoleCommand> findNullCommands() {
+        return ConsoleAdapter.commands.stream().filter(command -> command.command() == null).collect(Collectors.toSet());
     }
 }
