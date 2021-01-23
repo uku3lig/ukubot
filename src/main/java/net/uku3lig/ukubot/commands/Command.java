@@ -6,6 +6,7 @@ import net.uku3lig.ukubot.core.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +27,15 @@ public abstract class Command {
 
     public IsSenderAllowed allowed() {
         return IsSenderAllowed.Default;
+    }
+
+    public Duration cooldown() {
+        return switch (allowed()) {
+            case Friend -> Duration.ofSeconds(30);
+            case Moderator -> Duration.ofMinutes(1);
+            case Administrator -> Duration.ofSeconds(150); //2m30
+            default -> Duration.ofSeconds(5);
+        };
     }
 
     /**
