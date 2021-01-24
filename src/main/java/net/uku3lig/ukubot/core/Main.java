@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.uku3lig.ukubot.commands.CommandAdapter;
@@ -48,6 +49,8 @@ public class Main {
                     .setDisabledIntents(GatewayIntent.DIRECT_MESSAGES,GatewayIntent.GUILD_VOICE_STATES)
                     .enableIntents(GatewayIntent.GUILD_PRESENCES)
                     .enableCache(CacheFlag.ACTIVITY)
+                    //fun
+                    .setActivity(Activity.playing("vous rendre heureux"))
                     //login to discord
                     .build();
         } catch (LoginException e) {
