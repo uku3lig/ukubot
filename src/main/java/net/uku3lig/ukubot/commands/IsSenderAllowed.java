@@ -8,11 +8,11 @@ import java.util.function.Predicate;
 
 public enum IsSenderAllowed {
     Default(member -> true),
-    Moderator(member -> member.hasPermission(Permission.MESSAGE_MANAGE)),
-    Administrator(member -> member.hasPermission(Permission.ADMINISTRATOR)),
+    Uku(member -> member.getId().equals("319463560356823050")),
     Friend(member -> member.getUser().getMutualGuilds().stream().map(Guild::getIdLong)
             .anyMatch(id -> id == 796380718481408000L)),
-    Uku(member -> member.getId().equals("319463560356823050"));
+    Administrator(member -> member.hasPermission(Permission.ADMINISTRATOR) || Friend.isAllowed(member)),
+    Moderator(member -> member.hasPermission(Permission.MESSAGE_MANAGE) || Administrator.isAllowed(member));
 
     private final Predicate<Member> p;
 
