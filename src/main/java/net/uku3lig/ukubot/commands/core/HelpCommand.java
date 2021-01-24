@@ -34,9 +34,7 @@ public class HelpCommand extends Command {
                     .formatted(CommandAdapter.prefixes.get(event.getGuild()));
             String commands = allowed.stream().map(Command::command).collect(Collectors.joining("\n"));
 
-            EmbedBuilder builder = new EmbedBuilder()
-                    .setAuthor(Main.botName)
-                    .setColor(Main.embedColor)
+            EmbedBuilder builder = Main.getDefaultEmbed()
                     .setTitle("Help")
                     .setDescription(important)
                     .addField("Commands", commands, true)

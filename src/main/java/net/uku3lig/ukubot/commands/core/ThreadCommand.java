@@ -39,9 +39,7 @@ public class ThreadCommand extends Command {
 
         switch (event.args[0]) {
             case "list":
-                EmbedBuilder builder = new EmbedBuilder()
-                        .setAuthor(Main.botName)
-                        .setColor(Main.embedColor)
+                EmbedBuilder builder = Main.getDefaultEmbed()
                         .setTitle("Threads")
                         .setTimestamp(LocalDateTime.now());
                 getThreadsByGroup(CommandAdapter.getThreadGroups()).forEach((group, thread) -> {
@@ -144,9 +142,7 @@ public class ThreadCommand extends Command {
     private MessageEmbed buildThreadInfo(Thread t) {
         Instant since = Instant.ofEpochMilli(Long.parseLong(t.getName().split("-")[1]
                 .replaceAll("\\D", "")));
-        return new EmbedBuilder()
-                .setAuthor(Main.botName)
-                .setColor(Main.embedColor)
+        return Main.getDefaultEmbed()
                 .setTitle("Thread info: %s".formatted(t.getName()))
                 .addField("Id", String.valueOf(t.getId()), true)
                 .addField("Command", t.getThreadGroup().getName(), false)

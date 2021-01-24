@@ -56,9 +56,7 @@ public abstract class Command {
         String desc = "%s\n\nUsage: `%s%s`"
                 .formatted(description(), CommandAdapter.prefixes.get(c.getGuild()), help());
         if (!aliases().isEmpty()) desc += "\nAliases: " + String.join(", ", aliases());
-        EmbedBuilder builder = new EmbedBuilder()
-                .setAuthor(Main.botName)
-                .setColor(Main.embedColor)
+        EmbedBuilder builder = Main.getDefaultEmbed()
                 .setTitle("Help: %s".formatted(command()))
                 .setDescription(desc)
                 .setTimestamp(LocalDateTime.now());

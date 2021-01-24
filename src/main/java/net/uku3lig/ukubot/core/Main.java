@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.core;
 
 import lombok.Getter;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -19,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -53,6 +55,7 @@ public class Main {
         try {
             jda.awaitReady();
             runWhenReady.forEach(c -> new Thread(() -> c.accept(jda)).start());
+            logger.info("Bot ready!");
         } catch (InterruptedException ignored) {
         }
     }
@@ -84,5 +87,12 @@ public class Main {
 
     public static boolean isJar() {
         return Main.class.getResource("Main.class").toExternalForm().startsWith("jar:");
+    }
+
+    public static EmbedBuilder getDefaultEmbed() {
+        return new EmbedBuilder()
+                .setAuthor(botName)
+                .setColor(embedColor)
+                .setTimestamp(Instant.now());
     }
 }

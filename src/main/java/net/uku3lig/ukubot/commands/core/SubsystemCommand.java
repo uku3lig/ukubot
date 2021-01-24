@@ -31,12 +31,9 @@ public class SubsystemCommand extends Command {
             String subs = SubsystemAdapter.getSubsystems().stream()
                     .map(s -> s.getClass().getSimpleName() + " (" + (s.enabled ? "enabled" : "disabled") + ")")
                     .collect(Collectors.joining("\n"));
-            EmbedBuilder builder = new EmbedBuilder()
-                    .setAuthor(Main.botName)
-                    .setColor(Main.embedColor)
+            EmbedBuilder builder = Main.getDefaultEmbed()
                     .setTitle("Subsystems")
-                    .setDescription(subs)
-                    .setTimestamp(Instant.now());
+                    .setDescription(subs);
             event.getChannel().sendMessage(builder.build()).queue();
             return;
         } else if (event.args.length < 2) {

@@ -5,8 +5,6 @@ import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.core.Main;
 
-import java.time.Instant;
-
 public class PingCommand extends Command {
     @Override
     public String command() {
@@ -20,12 +18,9 @@ public class PingCommand extends Command {
 
     @Override
     public void onCommandReceived(CommandReceivedEvent event) {
-        EmbedBuilder builder = new EmbedBuilder()
-                .setAuthor(Main.botName)
+        EmbedBuilder builder = Main.getDefaultEmbed()
                 .setTitle("Ping")
-                .setColor(Main.embedColor)
-                .addField("Gateway", Main.getJda().getGatewayPing() + " ms", true)
-                .setTimestamp(Instant.now());
+                .addField("Gateway", Main.getJda().getGatewayPing() + " ms", true);
         Main.getJda().getRestPing().queue(ping -> {
             builder.addField("REST", ping + " ms", true);
             event.getChannel().sendMessage(builder.build()).queue();
