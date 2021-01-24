@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.uku3lig.ukubot.commands.CommandAdapter;
 import net.uku3lig.ukubot.console.ConsoleAdapter;
+import net.uku3lig.ukubot.hibernate.Database;
 import net.uku3lig.ukubot.subsystems.SubsystemAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class Main {
 
     public static void main(String[] args) {
         ConsoleAdapter.getInstance().start();
+        Database.init();
         try {
             jda = JDABuilder.createDefault(getToken())
                     //add our adapters
