@@ -46,7 +46,7 @@ public class Config {
             persistentPermissions.put(c.getClass().getSimpleName(), c.allowed().name());
         });
 
-        guildId = g.getIdLong();
+        if (g != null) guildId = g.getIdLong();
         Database.saveOrUpdate(this);
     }
 
