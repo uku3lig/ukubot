@@ -15,59 +15,33 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-@Getter @Setter(AccessLevel.PRIVATE)
+@Getter(AccessLevel.PUBLIC)
 public class Config {
-    private static Config defaultInstance;
-
     @Id
+    @Setter(AccessLevel.PRIVATE)
     private long guildId;
 
     @Transient
     private Guild guild;
 
-    @Setter(AccessLevel.PUBLIC)
-    private String prefix = "?";
-
-    @MapKeyColumn
-    @ElementCollection
-    private final Map<String, Duration> cooldowns = new HashMap<>();
-
-    @Transient
-    private final Map<String, IsSenderAllowed> permissions = new HashMap<>();
-
-    @MapKeyColumn
-    @ElementCollection
-    private final Map<String, String> persistentPermissions = new HashMap<>();
+    @Setter(AccessLevel.PRIVATE)
+    private String prefix;
 
     protected Config(Guild g) {
-        CommandAdapter.getCommands().forEach(c -> {
-            cooldowns.put(c.getClass().getSimpleName(), c.cooldown());
-            permissions.put(c.getClass().getSimpleName(), c.allowed());
-            persistentPermissions.put(c.getClass().getSimpleName(), c.allowed().name());
-        });
+        this.prefix = "?";
 
         if (g != null) guildId = g.getIdLong();
-        Database.saveOrUpdate(this);
+        if (g != null) Database.saveOrUpdate(this);
     }
 
     //JPA constructor
     protected Config() {
         Main.runWhenReady(jda -> guild = jda.getGuildById(guildId));
-        persistentPermissions.forEach((s, p) -> permissions.put(s, IsSenderAllowed.valueOf(p)));
     }
 
-    public Config editCooldown(Class<? extends Command> command, Duration cooldown) {
-        if (cooldowns.get(command.getSimpleName()).isNegative() ||
-                permissions.get(command.getSimpleName()).equals(IsSenderAllowed.Uku))
-            throw new SecurityException("Cannot change this command's cooldown");
-        cooldowns.put(command.getSimpleName(), cooldown);
-        return this;
-    }
-
-    public Config editAllowed(Class<? extends Command> command, IsSenderAllowed allowed) {
-        if (permissions.get(command.getSimpleName()).equals(IsSenderAllowed.Uku))
-            throw new SecurityException("Cannot change this command's allowed");
-        permissions.put(command.getSimpleName(), allowed);
+    public Config editPrefix(String newPrefix) {
+        prefix = newPrefix;
+        Database.saveOrUpdate(this);
         return this;
     }
 
@@ -81,18 +55,7 @@ public class Config {
                 .findFirst();
     }
 
-    static {
-        Main.runWhenReady(jda -> {
-            Set<Guild> cfgs = Database.getAll(Config.class).stream()
-                    .map(cfg -> cfg.guild).collect(Collectors.toSet());
-            Set<Guild> guilds = new HashSet<>(Main.getJda().getGuilds());
-            if (cfgs.size() != guilds.size()) {
-                guilds.removeAll(cfgs); //all guilds that aren't in config
-                cfgs.removeAll(Main.getJda().getGuilds()); //all configs that are linked to left guilds
-
-                guilds.stream().map(Config::new).forEach(Database::saveOrUpdate);
-                cfgs.stream().map(Config::new).forEach(Database::delete);
-            }
-        });
+    public static Config getEffectiveConfig(Guild g) {
+        return getConfigByGuild(g).orElseGet(() -> newDefaultConfig(g));
     }
 }

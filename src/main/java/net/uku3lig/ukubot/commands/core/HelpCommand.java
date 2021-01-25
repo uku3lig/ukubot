@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandAdapter;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
+import net.uku3lig.ukubot.core.Config;
 import net.uku3lig.ukubot.core.Main;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class HelpCommand extends Command {
 
         if (event.args.length == 0) {
             String important = "Use `%shelp <command>` to find more specific help on a command"
-                    .formatted(CommandAdapter.prefixes.get(event.getGuild()));
+                    .formatted(Config.getEffectiveConfig(event.getGuild()).getPrefix());
             String commands = allowed.stream().map(Command::command).collect(Collectors.joining("\n"));
 
             EmbedBuilder builder = Main.getDefaultEmbed()

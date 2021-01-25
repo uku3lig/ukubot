@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.uku3lig.ukubot.core.Config;
 import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.utils.ClassScanner;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +27,6 @@ public class CommandAdapter extends ListenerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(CommandAdapter.class);
     @Getter
     private static final Set<Command> commands = new HashSet<>();
-    public static final Map<Guild, String> prefixes = new HashMap<>();
-    public static final String defaultPrefix = "?";
 
     @Getter
     private static final Set<ThreadGroup> threadGroups = new HashSet<>();
@@ -43,8 +42,6 @@ public class CommandAdapter extends ListenerAdapter {
     }
 
     private CommandAdapter() {
-        Main.runWhenReady(jda -> jda.getGuilds().stream().filter(g -> !prefixes.containsKey(g))
-                .forEach(g -> prefixes.put(g, defaultPrefix)));
         commands.addAll(ClassScanner.findCommands());
         logger.info("Found %s commands".formatted(commands.size()));
         if (!findNullCommands().isEmpty()) {
@@ -59,7 +56,7 @@ public class CommandAdapter extends ListenerAdapter {
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event instanceof CommandReceivedEvent) return;
         //If message doesn't start with guild prefix, not a command
-        if (!event.getMessage().getContentRaw().startsWith(prefixes.get(event.getGuild()))) return;
+        if (!event.getMessage().getContentRaw().startsWith(Config.getEffectiveConfig(event.getGuild()).getPrefix())) return;
         //We don't want self loops
         if (event.getAuthor().getId().equals(Main.getJda().getSelfUser().getId())) return;
         //Bot loops neither

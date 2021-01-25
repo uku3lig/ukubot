@@ -2,6 +2,7 @@ package net.uku3lig.ukubot.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.uku3lig.ukubot.core.Config;
 import net.uku3lig.ukubot.core.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public abstract class Command {
 
     public void sendHelp(TextChannel c) {
         String desc = "%s\n\nUsage: `%s%s`"
-                .formatted(description(), CommandAdapter.prefixes.get(c.getGuild()), help());
+                .formatted(description(), Config.getEffectiveConfig(c.getGuild()).getPrefix(), help());
         if (!aliases().isEmpty()) desc += "\nAliases: " + String.join(", ", aliases());
         EmbedBuilder builder = Main.getDefaultEmbed()
                 .setTitle("Help: %s".formatted(command()))
