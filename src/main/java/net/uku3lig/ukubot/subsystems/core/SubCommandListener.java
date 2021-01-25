@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class SubCommandListener extends Subsystem {
     @Override
@@ -22,7 +23,7 @@ public class SubCommandListener extends Subsystem {
 
     private final User sender;
     private final MessageChannel channel;
-    private final Function<Message, Boolean> action;
+    private final Predicate<Message> action;
     private final Duration timeout;
     private final boolean retry;
     private Timer timer = new Timer();
@@ -31,7 +32,7 @@ public class SubCommandListener extends Subsystem {
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (!(channel instanceof TextChannel)) return;
         if (!sender.getId().equalsIgnoreCase(event.getAuthor().getId())) return;
-        if (!action.apply(event.getMessage()) && retry) timer = scheduleFromNow(timer, timeout);
+        if (!action.test(event.getMessage()) && retry) timer = scheduleFromNow(timer, timeout);
         else {
             timer.cancel();
             Main.getJda().removeEventListener(this);
@@ -42,7 +43,7 @@ public class SubCommandListener extends Subsystem {
     public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
         if (!(channel instanceof PrivateChannel)) return;
         if (!sender.getId().equals(event.getAuthor().getId())) return;
-        if (!action.apply(event.getMessage()) && retry) timer = scheduleFromNow(timer, timeout);
+        if (!action.test(event.getMessage()) && retry) timer = scheduleFromNow(timer, timeout);
         else {
             timer.cancel();
             Main.getJda().removeEventListener(this);
@@ -57,7 +58,7 @@ public class SubCommandListener extends Subsystem {
         retry = false;
     }
 
-    private SubCommandListener(User sender, MessageChannel channel, Function<Message, Boolean> action, Duration timeout, boolean retry) {
+    private SubCommandListener(User sender, MessageChannel channel, Predicate<Message> action, Duration timeout, boolean retry) {
         this.sender = sender;
         this.channel = channel;
         this.action = action;
@@ -65,8 +66,6 @@ public class SubCommandListener extends Subsystem {
         this.retry = retry;
 
         timer = scheduleFromNow(timer, timeout);
-
-        System.out.println(channel.getClass().getSimpleName());
 
         Main.getJda().addEventListener(this);
     }
@@ -92,7 +91,7 @@ public class SubCommandListener extends Subsystem {
     public static class Builder {
         private User sender = null;
         private MessageChannel channel = null;
-        private Function<Message, Boolean> action = null;
+        private Predicate<Message> action = null;
         private Duration timeout = Duration.ofMinutes(1);
         private boolean retry = false;
 
@@ -116,7 +115,7 @@ public class SubCommandListener extends Subsystem {
             return this;
         }
 
-        public Builder action(Function<Message, Boolean> action) {
+        public Builder action(Predicate<Message> action) {
             this.action = action;
             return this;
         }

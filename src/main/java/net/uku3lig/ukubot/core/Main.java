@@ -46,8 +46,7 @@ public class Main {
                     .addEventListeners(CommandAdapter.getInstance(), SubsystemAdapter.getInstance())
                     //Cache and intents
                     .disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
-                    .setDisabledIntents(GatewayIntent.DIRECT_MESSAGES,GatewayIntent.GUILD_VOICE_STATES)
-                    .enableIntents(GatewayIntent.GUILD_PRESENCES)
+                    .enableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
                     .enableCache(CacheFlag.ACTIVITY)
                     //fun
                     .setActivity(Activity.playing("vous rendre heureux"))
