@@ -43,7 +43,7 @@ public class Config {
 
     public static Config newDefaultConfig(Guild g, User user) {
         Objects.requireNonNull(Main.getJda().getUserById(user.getId())).openPrivateChannel().queue(pch -> {
-            pch.sendMessage("Thank you for inviting me to your guild " + g.getName() + "!\n" +
+            pch.sendMessage("Thank you for inviting me to your guild **" + g.getName() + "**!\n" +
                     "My default prefix is `?`, and use `?help` to see the available commands.\n" +
                     "If you need help, come to my discord server: https://discord.gg/CN8vCMyq6H\n" +
                     "Do `?invite` to get an invite link for another guild!").queue();
