@@ -4,6 +4,9 @@ plugins {
 
     id "io.freefair.lombok" version "5.3.0"
     id 'com.github.johnrengelman.shadow' version '6.1.0'
+
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
 group 'net.uku3lig'
@@ -12,6 +15,9 @@ version '0.0'
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url 'https://jitpack.io'
+    }
 }
 
 sourceCompatibility = targetCompatibility = 1.15
@@ -28,14 +34,28 @@ dependencies {
 
     //U_Bren's most hated dependency
     implementation group: 'org.reflections', name: 'reflections', version: "0.9.+"
+    implementation 'net.oneandone.reflections8:reflections8:0.11.5'
     implementation 'org.codehaus.groovy:groovy-all:3.0.7'
 
     //:joy::joy::joy:
     implementation 'com.vdurmont:emoji-java:5.1.1'
 
+    //Java Persistence API
+    implementation 'org.hibernate:hibernate-core:5.4.27.Final'
+    implementation 'mysql:mysql-connector-java:8.0.23'
+    implementation 'org.hibernate:hibernate-c3p0:5.4.27.Final'
+
     //why do i have that ?
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    //Spring
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    //Discord OAuth2
+    implementation ('com.github.Mokulu:discord-oauth2-api:1.0.1') {
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
 
     //lombok is gathered by plugin
 }
@@ -54,8 +74,4 @@ jar {
 
 build {
     dependsOn shadowJar
-}
-
-shadowJar {
-    minimize()
 }

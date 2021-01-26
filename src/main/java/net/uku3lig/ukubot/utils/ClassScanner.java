@@ -3,17 +3,18 @@ package net.uku3lig.ukubot.utils;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.console.ConsoleCommand;
 import net.uku3lig.ukubot.subsystems.Subsystem;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.ClasspathHelper;
+import org.reflections8.Reflections;
+import org.reflections8.scanners.SubTypesScanner;
+import org.reflections8.scanners.TypeAnnotationsScanner;
+import org.reflections8.util.ConfigurationBuilder;
+import org.reflections8.util.ClasspathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Entity;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -60,5 +61,16 @@ public class ClassScanner {
                     }
                 }).filter(Objects::nonNull)
                 .collect(Collectors.toSet());
+    }
+
+    public static Set<Class<?>> findEntities(String pkg) {
+        return findAnnotations(Entity.class, pkg);
+    }
+
+    public static Set<Class<?>> findAnnotations(Class<? extends Annotation> annotation, String pkg) {
+        return new Reflections(new ConfigurationBuilder()
+                .setUrls(ClasspathHelper.forPackage(pkg)))
+                //.setScanners(new TypeAnnotationsScanner()))
+                .getTypesAnnotatedWith(annotation);
     }
 }

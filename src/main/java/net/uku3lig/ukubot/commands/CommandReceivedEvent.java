@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.commands;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.uku3lig.ukubot.core.Config;
 
 import java.util.Arrays;
 
@@ -12,6 +13,6 @@ public class CommandReceivedEvent extends GuildMessageReceivedEvent {
         super(event.getJDA(), event.getResponseNumber(), event.getMessage());
         String[] splitMessage = event.getMessage().getContentRaw().split("\\s+");
         args = Arrays.stream(splitMessage).skip(1).toArray(String[]::new);
-        command = splitMessage[0].substring(CommandAdapter.prefixes.get(event.getGuild()).length());
+        command = splitMessage[0].substring(Config.getEffectiveConfig(event.getGuild()).getPrefix().length());
     }
 }
