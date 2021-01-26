@@ -24,10 +24,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 @SpringBootApplication(scanBasePackages = "net.uku3lig.ukubot.spring")
 public class Main {
@@ -95,6 +97,14 @@ public class Main {
 
     public static boolean isJar() {
         return Main.class.getResource("Main.class").toExternalForm().startsWith("jar:");
+    }
+
+    public static boolean isDocker() {
+        try (Stream<String> stream = Files.lines(Paths.get("/proc/1/cgroup"))) {
+            return stream.anyMatch(line -> line.contains("/docker") || line.contains("/ecs"));
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public static EmbedBuilder getDefaultEmbed() {
