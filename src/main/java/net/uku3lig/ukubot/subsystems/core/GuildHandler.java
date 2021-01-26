@@ -1,6 +1,5 @@
 package net.uku3lig.ukubot.subsystems.core;
 
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.uku3lig.ukubot.core.Config;
 import net.uku3lig.ukubot.hibernate.Database;
