@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,15 +27,13 @@ public class OAuth2Controller {
             redirectUri = Main.isJar() ? "vps ip" : "http://localhost:8080/";
 
     @GetMapping
-    public String login(@RequestParam(name = "code") String code) throws IOException {
+    public ModelAndView login(@RequestParam(name = "code") String code, @RequestParam(name = "guild_id") String guildId) throws IOException {
         if (oAuth == null) oAuth = getOAuth();
         TokensResponse tokens = oAuth.getTokens(code);
         DiscordAPI api = new DiscordAPI(tokens.getAccessToken());
         User user = api.fetchUser();
-        Objects.requireNonNull(Main.getJda().getUserById(user.getId()))
-                .getMutualGuilds().stream().filter(g -> Config.getConfigByGuild(g).isEmpty())
-                .findFirst().ifPresent(g -> Config.newDefaultConfig(g, user));
-        return "login";
+        Config.newDefaultConfig(Main.getJda().getGuildById(guildId), user);
+        return new ModelAndView("redirect:https://discord.com/oauth2/authorized");
     }
 
     private DiscordOAuth getOAuth() {
