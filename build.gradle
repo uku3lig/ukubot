@@ -10,7 +10,7 @@ plugins {
 }
 
 group 'net.uku3lig'
-version '0.0'
+version '1.0'
 
 repositories {
     mavenCentral()
