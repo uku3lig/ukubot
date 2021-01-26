@@ -5,7 +5,7 @@ import io.mokulu.discord.oauth.DiscordOAuth;
 import io.mokulu.discord.oauth.model.TokensResponse;
 import io.mokulu.discord.oauth.model.User;
 import net.uku3lig.ukubot.core.Config;
-import net.uku3lig.ukubot.core.DockerSecrets;
+import net.uku3lig.ukubot.utils.DockerSecrets;
 import net.uku3lig.ukubot.core.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
 @RestController
 public class OAuth2Controller {

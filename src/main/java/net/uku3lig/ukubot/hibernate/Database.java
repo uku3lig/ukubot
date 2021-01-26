@@ -1,23 +1,17 @@
 package net.uku3lig.ukubot.hibernate;
 
-import net.uku3lig.ukubot.core.DockerSecrets;
+import net.uku3lig.ukubot.utils.DockerSecrets;
 import net.uku3lig.ukubot.utils.ClassScanner;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.CheckForNull;
 import javax.persistence.Entity;
-import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Instant;
 import java.util.*;
 
 public class Database {

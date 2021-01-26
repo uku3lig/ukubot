@@ -1,4 +1,6 @@
-package net.uku3lig.ukubot.core;
+package net.uku3lig.ukubot.utils;
+
+import net.uku3lig.ukubot.core.Main;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
