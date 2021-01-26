@@ -1,8 +1,8 @@
 package net.uku3lig.ukubot.core;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +22,7 @@ public class DockerSecrets {
     }
 
     private static Map<String, String> init() {
+        if (!Main.isDocker()) return Collections.emptyMap();
         final Map<String, String> secrets = new HashMap<>();
         for (String secret : secretsNames) {
             if (!basePath.resolve(secret).toFile().exists()) continue;
@@ -30,6 +31,6 @@ public class DockerSecrets {
             } catch (Exception ignored) {
             }
         }
-        return secrets;
+        return Collections.unmodifiableMap(secrets);
     }
 }
