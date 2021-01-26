@@ -13,6 +13,8 @@ import net.uku3lig.ukubot.hibernate.Database;
 import net.uku3lig.ukubot.subsystems.SubsystemAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
@@ -27,6 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
+@SpringBootApplication(scanBasePackages = "net.uku3lig.ukubot.spring")
 public class Main {
     @Getter
     private static JDA jda = null;
@@ -38,6 +41,7 @@ public class Main {
     public static final Color embedColor = Color.getHSBColor(1.37f, 1, 0.58f);
 
     public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
         ConsoleAdapter.getInstance().start();
         Database.init();
         try {
@@ -65,12 +69,12 @@ public class Main {
     }
 
     private static String getToken() {
-        String path = Files.exists(Path.of("/run/secrets/token")) ? "/run/secrets/token" : "./TOKEN";
+        if (DockerSecrets.getSecret("token").isPresent()) return DockerSecrets.getSecret("token").get();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(path));
+            BufferedReader reader = new BufferedReader(new FileReader("./TOKEN"));
             String token = reader.readLine();
             if (token == null || token.isEmpty() || token.isBlank()) {
-                logger.error("Cannot find token in file '" + path + "', are you sure it is there ?");
+                logger.error("Cannot find token in file './TOKEN', are you sure it is there ?");
                 Runtime.getRuntime().exit(1);
             }
             return token.strip();
