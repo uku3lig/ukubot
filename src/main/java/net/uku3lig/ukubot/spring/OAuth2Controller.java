@@ -36,17 +36,7 @@ public class OAuth2Controller {
     }
 
     private DiscordOAuth getOAuth() {
-        String clientSecret = DockerSecrets.getSecret("client_secret").orElseGet(this::readClientSecret);
+        String clientSecret = DockerSecrets.getSecretOrFile("client_secret", Path.of("./CLIENT_SECRET"));
         return new DiscordOAuth(clientID, clientSecret, redirectUri, new String[] {"identify"});
-    }
-
-    private String readClientSecret() {
-        try {
-            return Files.readString(Path.of("./CLIENT_SECRET"));
-        } catch (IOException e) {
-            logger.error("Error: cannot read client secret");
-            Runtime.getRuntime().exit(5);
-            return "";
-        }
     }
 }
