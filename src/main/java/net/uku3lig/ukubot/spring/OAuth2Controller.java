@@ -24,7 +24,7 @@ public class OAuth2Controller {
     private static final Logger logger = LoggerFactory.getLogger(OAuth2Controller.class);
     private static DiscordOAuth oAuth = null;
     private static final String clientID = "775431908666245121",
-            redirectUri = Main.isJar() ? "vps ip" : "http://localhost:8080/";
+            redirectUri = Main.isDocker() ? "vps ip" : "http://localhost:8080/";
 
     @GetMapping
     public ModelAndView login(@RequestParam(name = "code") String code, @RequestParam(name = "guild_id") String guildId) throws IOException {
