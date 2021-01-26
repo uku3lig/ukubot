@@ -1,5 +1,6 @@
 package net.uku3lig.ukubot.hibernate;
 
+import net.uku3lig.ukubot.core.DockerSecrets;
 import net.uku3lig.ukubot.utils.ClassScanner;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -38,10 +39,8 @@ public class Database {
             ClassScanner.findEntities("net.uku3lig.ukubot")
                     .forEach(cfg::addAnnotatedClass);
 
-            if (Files.exists(Path.of("/run/secrets/db_password"))) {
-                cfg.setProperty("hibernate.connection.password",
-                        Files.readString(Path.of("/run/secrets/db_password")));
-            }
+            if (DockerSecrets.getSecret("db_pwd").isPresent())
+                cfg.setProperty("hibernate.connection.password", DockerSecrets.getSecret("db_pwd").get());
 
             final ServiceRegistry registry = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
             factory = cfg.buildSessionFactory(registry);
