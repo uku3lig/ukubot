@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.commands.reddit;
 
 import com.vdurmont.emoji.EmojiParser;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.OkHttpNetworkAdapter;
@@ -15,10 +16,12 @@ import net.dean.jraw.tree.RootCommentNode;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.uku3lig.ukubot.SingleCommand;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.utils.DockerSecrets;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +30,11 @@ import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
-public class RedditCommand extends Command {
-    private final RedditClient reddit;
+public class RedditCommand extends SingleCommand {
+    @Getter
+    private static RedditClient reddit;
     private static final Logger logger = LoggerFactory.getLogger(RedditCommand.class);
-    private final int maxCalls = 10;
+    private static final int maxCalls = 15, maxUpvotes = 1500;
 
     @Override
     public String command() {
@@ -52,7 +56,7 @@ public class RedditCommand extends Command {
 
     @SneakyThrows
     @Override
-    public void onCommandReceived(CommandReceivedEvent event) {
+    public void onSingleCommandReceived(CommandReceivedEvent event) {
         AtomicReference<Message> msg = new AtomicReference<>();
         event.getChannel().sendMessage("Computing, please wait...").queue(msg::set);
 
@@ -74,7 +78,11 @@ public class RedditCommand extends Command {
                     return;
                 }
                 int minUpvotes = Integer.parseInt(event.args[1]);
-                s = randomPost(reddit.subreddit(event.args[0]), minUpvotes).getSubject();
+                RootCommentNode r = randomPost(reddit.subreddit(event.args[0]), minUpvotes);
+                if (r == null) {
+                    msg.get().editMessage("Sorry, cannot find post. Please retry later.").queue();
+                    return;
+                } else s = r.getSubject();
             }
         }
         SubmissionType type = SubmissionType.of(new URL(s.getUrl()));
@@ -90,16 +98,16 @@ public class RedditCommand extends Command {
             case Image -> builder.setImage(s.getUrl());
             case Default -> builder.setDescription(s.getUrl());
         }
-        msg.get().editMessage("").embed(builder.build()).queue();
+        msg.get().editMessage(" ").embed(builder.build()).queue();
     }
 
     @Override
     public String help() {
-        return "reddit [sub] [minimum upvotes (< 1000)]";
+        return "reddit [sub] [minimum upvotes (0 < n < 1500)]";
     }
 
-    private RootCommentNode randomPost(SubredditReference sub, int minUpvotes) {
-        minUpvotes = Math.min(minUpvotes, 1000);
+    public static RootCommentNode randomPost(SubredditReference sub, int minUpvotes) {
+        minUpvotes = Math.min(minUpvotes, maxUpvotes);
         RootCommentNode r;
         for (int i = 0; i < maxCalls; i++) {
             r = sub.randomSubmission();
@@ -108,7 +116,7 @@ public class RedditCommand extends Command {
         return null;
     }
 
-    private enum SubmissionType {
+    public enum SubmissionType {
         Text(0),
         Image(1),
         Default(2);
