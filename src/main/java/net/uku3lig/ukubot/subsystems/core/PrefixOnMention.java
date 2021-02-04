@@ -1,7 +1,7 @@
 package net.uku3lig.ukubot.subsystems.core;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.uku3lig.ukubot.config.Config;
+import net.uku3lig.ukubot.core.Config;
 import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.subsystems.Subsystem;
 import org.jetbrains.annotations.NotNull;

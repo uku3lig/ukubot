@@ -2,7 +2,7 @@ package net.uku3lig.ukubot.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.uku3lig.ukubot.config.Config;
+import net.uku3lig.ukubot.core.Config;
 import net.uku3lig.ukubot.core.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

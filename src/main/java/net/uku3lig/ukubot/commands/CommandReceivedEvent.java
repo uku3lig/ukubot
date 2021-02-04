@@ -1,7 +1,7 @@
 package net.uku3lig.ukubot.commands;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.uku3lig.ukubot.config.Config;
+import net.uku3lig.ukubot.core.Config;
 
 import java.util.Arrays;
 

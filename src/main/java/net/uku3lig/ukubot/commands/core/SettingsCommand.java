@@ -6,12 +6,10 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
-import net.uku3lig.ukubot.config.Config;
+import net.uku3lig.ukubot.core.Config;
 import net.uku3lig.ukubot.core.Main;
 
 import java.util.Arrays;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class SettingsCommand extends Command {
     @Override
@@ -29,16 +27,16 @@ public class SettingsCommand extends Command {
         switch (event.args.length) {
             case 0 -> sendHelp(event.getChannel());
             case 1 -> {
-                if (Arrays.stream(Setting.values()).noneMatch(s -> s.name.equalsIgnoreCase(event.args[0])))
+                if (Arrays.stream(Config.Settings.values()).noneMatch(s -> s.name.equalsIgnoreCase(event.args[0])))
                     sendHelp(event.getChannel());
-                else Arrays.stream(Setting.values()).filter(s -> s.name.equalsIgnoreCase(event.args[0]))
+                else Arrays.stream(Config.Settings.values()).filter(s -> s.name.equalsIgnoreCase(event.args[0]))
                         .forEach(s -> event.getChannel().sendMessage(getSettingDesc(s, event.getGuild())).queue());
             }
             default -> {
-                if (Arrays.stream(Setting.values()).noneMatch(s -> s.name.equalsIgnoreCase(event.args[0])))
+                if (Arrays.stream(Config.Settings.values()).noneMatch(s -> s.name.equalsIgnoreCase(event.args[0])))
                     sendHelp(event.getChannel());
                 else {
-                    Arrays.stream(Setting.values()).filter(s -> s.name.equalsIgnoreCase(event.args[0]))
+                    Arrays.stream(Config.Settings.values()).filter(s -> s.name.equalsIgnoreCase(event.args[0]))
                             .forEach(s -> s.editValue.accept(event.getGuild(), skipOneArg(event.args)));
                     event.getChannel().sendMessage("Successfully set new value for the setting").queue();
                 }
@@ -64,35 +62,12 @@ public class SettingsCommand extends Command {
         c.sendMessage(builder.build()).queue();
     }
 
-    private MessageEmbed getSettingDesc(Setting setting, Guild g) {
+    private MessageEmbed getSettingDesc(Config.Settings setting, Guild g) {
         return Main.getDefaultEmbed()
                 .setTitle(setting.name())
                 .addField("Current value", "`" + setting.currentValue.apply(g) + "`", false)
                 .addField("Command to edit", "`" + setting.commandToEdit + "`", false)
                 .addField("Allowed values", setting.allowedValues, false)
                 .build();
-    }
-
-    private enum Setting {
-        Prefix("prefix", "settings prefix <newPrefix>", "Any char sequence, up to 5 chars",
-                g -> cfg(g).getPrefix(),
-                (g, s) -> cfg(g).editPrefix(s[0].substring(0, Math.min(s[0].length(), 5))));
-
-        public final String name, commandToEdit, allowedValues;
-        public final Function<Guild, String> currentValue;
-        public final BiConsumer<Guild, String[]> editValue;
-
-        private static Config cfg(Guild g) {
-            return Config.getEffectiveConfig(g);
-        }
-
-        Setting(String name, String commandToEdit, String allowedValues,
-                Function<Guild, String> currentValue, BiConsumer<Guild, String[]> editValue) {
-            this.name = name;
-            this.commandToEdit = commandToEdit;
-            this.allowedValues = allowedValues;
-            this.currentValue = currentValue;
-            this.editValue = editValue;
-        }
     }
 }

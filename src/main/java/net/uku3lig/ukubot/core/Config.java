@@ -1,15 +1,16 @@
-package net.uku3lig.ukubot.config;
+package net.uku3lig.ukubot.core;
 
 import io.mokulu.discord.oauth.model.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.Guild;
-import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.hibernate.Database;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 @Entity
 @Getter(AccessLevel.PUBLIC)
@@ -46,10 +47,9 @@ public class Config {
         return new Config(g);
     }
 
-    public Config editPrefix(String newPrefix) {
+    public void editPrefix(String newPrefix) {
         prefix = newPrefix;
         Database.saveOrUpdate(this);
-        return this;
     }
 
     public static Config newDefaultConfig(Guild g) {
@@ -64,5 +64,28 @@ public class Config {
 
     public static Config getEffectiveConfig(Guild g) {
         return getConfigByGuild(g).orElseGet(() -> newDefaultConfig(g));
+    }
+
+    public enum Settings {
+        Prefix("prefix", "settings prefix <newPrefix>", "Any char sequence, up to 5 chars",
+                g -> cfg(g).getPrefix(),
+                (g, s) -> cfg(g).editPrefix(s[0].substring(0, Math.min(s[0].length(), 5))));
+
+        public final String name, commandToEdit, allowedValues;
+        public final Function<Guild, String> currentValue;
+        public final BiConsumer<Guild, String[]> editValue;
+
+        private static Config cfg(Guild g) {
+            return Config.getEffectiveConfig(g);
+        }
+
+        Settings(String name, String commandToEdit, String allowedValues,
+                Function<Guild, String> currentValue, BiConsumer<Guild, String[]> editValue) {
+            this.name = name;
+            this.commandToEdit = commandToEdit;
+            this.allowedValues = allowedValues;
+            this.currentValue = currentValue;
+            this.editValue = editValue;
+        }
     }
 }
