@@ -4,7 +4,7 @@ import io.mokulu.discord.oauth.DiscordAPI;
 import io.mokulu.discord.oauth.DiscordOAuth;
 import io.mokulu.discord.oauth.model.TokensResponse;
 import io.mokulu.discord.oauth.model.User;
-import net.uku3lig.ukubot.core.Config;
+import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.utils.DockerSecrets;
 import net.uku3lig.ukubot.core.Main;
 import org.slf4j.Logger;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 @RestController

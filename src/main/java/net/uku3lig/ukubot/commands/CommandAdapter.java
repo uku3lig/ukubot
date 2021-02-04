@@ -1,20 +1,17 @@
 package net.uku3lig.ukubot.commands;
 
 import lombok.Getter;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.uku3lig.ukubot.core.Config;
+import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.utils.ClassScanner;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

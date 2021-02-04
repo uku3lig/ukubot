@@ -6,16 +6,12 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
-import net.uku3lig.ukubot.core.Config;
+import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.core.Main;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class SettingsCommand extends Command {
     @Override
@@ -79,12 +75,16 @@ public class SettingsCommand extends Command {
 
     private enum Setting {
         Prefix("prefix", "settings prefix <newPrefix>", "Any char sequence, up to 5 chars",
-                g -> Config.getEffectiveConfig(g).getPrefix(),
-                (g, s) -> Config.getEffectiveConfig(g).editPrefix(s[0].substring(0, Math.min(s[0].length(), 5))));
+                g -> cfg(g).getPrefix(),
+                (g, s) -> cfg(g).editPrefix(s[0].substring(0, Math.min(s[0].length(), 5))));
 
         public final String name, commandToEdit, allowedValues;
         public final Function<Guild, String> currentValue;
         public final BiConsumer<Guild, String[]> editValue;
+
+        private static Config cfg(Guild g) {
+            return Config.getEffectiveConfig(g);
+        }
 
         Setting(String name, String commandToEdit, String allowedValues,
                 Function<Guild, String> currentValue, BiConsumer<Guild, String[]> editValue) {

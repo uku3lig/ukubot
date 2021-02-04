@@ -1,20 +1,15 @@
-package net.uku3lig.ukubot.core;
+package net.uku3lig.ukubot.config;
 
 import io.mokulu.discord.oauth.model.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.uku3lig.ukubot.commands.Command;
-import net.uku3lig.ukubot.commands.CommandAdapter;
-import net.uku3lig.ukubot.commands.IsSenderAllowed;
+import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.hibernate.Database;
 
 import javax.persistence.*;
-import java.time.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter(AccessLevel.PUBLIC)
