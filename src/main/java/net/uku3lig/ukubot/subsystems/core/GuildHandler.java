@@ -15,6 +15,11 @@ public class GuildHandler extends Subsystem {
     }
 
     @Override
+    public @NotNull String getDescription() {
+        return "Removes guilds from database when left";
+    }
+
+    @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
         Optional<Config> cfg = Config.getConfigByGuild(event.getGuild());
         if (cfg.isEmpty()) return;

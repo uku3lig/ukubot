@@ -13,6 +13,11 @@ public class PrefixOnMention extends Subsystem {
     }
 
     @Override
+    public @NotNull String getDescription() {
+        return "Returns the prefix when it is mentioned";
+    }
+
+    @Override
     public boolean isEnabledByDefault() {
         return true;
     }

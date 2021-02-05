@@ -13,9 +13,7 @@ public abstract class Subsystem extends ListenerAdapter {
     public abstract String getName();
 
     @NotNull
-    public String getDescription() {
-        return "No description provided.";
-    }
+    public abstract String getDescription();
 
     public boolean isEnabledByDefault() {
         return false;

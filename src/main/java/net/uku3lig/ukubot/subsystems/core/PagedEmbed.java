@@ -28,6 +28,11 @@ public class PagedEmbed<T> extends Subsystem {
     }
 
     @Override
+    public @NotNull String getDescription() {
+        return "Creates and handles embeds that act like pages";
+    }
+
+    @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
         if (event.getUser().getId().equalsIgnoreCase(Main.getJda().getSelfUser().getId())) return;
         if (!event.getMessageId().equalsIgnoreCase(message.getId())) return;

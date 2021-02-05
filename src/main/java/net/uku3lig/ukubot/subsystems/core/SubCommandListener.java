@@ -21,6 +21,11 @@ public class SubCommandListener extends Subsystem {
         return "Sub-command listener";
     }
 
+    @Override
+    public @NotNull String getDescription() {
+        return "Handles and listens for subcommands";
+    }
+
     private final User sender;
     private final MessageChannel channel;
     private final Predicate<Message> action;

@@ -20,6 +20,11 @@ public class ReactionListener extends Subsystem {
         return "Reaction Listener";
     }
 
+    @Override
+    public @NotNull String getDescription() {
+        return "Handles reactions on messages, permitting actions on reaction";
+    }
+
     private final Message source;
     private final Map<String, Runnable> actions;
     private final IsSenderAllowed allowed;
