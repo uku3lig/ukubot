@@ -6,7 +6,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
-import net.uku3lig.ukubot.core.Config;
+import net.uku3lig.ukubot.commands.IsSenderAllowed;
+import net.uku3lig.ukubot.config.Settings;
 import net.uku3lig.ukubot.core.Main;
 
 import java.util.Arrays;
@@ -27,17 +28,17 @@ public class SettingsCommand extends Command {
         switch (event.args.length) {
             case 0 -> sendHelp(event.getChannel());
             case 1 -> {
-                if (Arrays.stream(Config.Settings.values()).noneMatch(s -> s.name.equalsIgnoreCase(event.args[0])))
+                if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().name.equalsIgnoreCase(event.args[0])))
                     sendHelp(event.getChannel());
-                else Arrays.stream(Config.Settings.values()).filter(s -> s.name.equalsIgnoreCase(event.args[0]))
+                else Arrays.stream(Settings.values()).filter(s -> s.get().name.equalsIgnoreCase(event.args[0]))
                         .forEach(s -> event.getChannel().sendMessage(getSettingDesc(s, event.getGuild())).queue());
             }
             default -> {
-                if (Arrays.stream(Config.Settings.values()).noneMatch(s -> s.name.equalsIgnoreCase(event.args[0])))
+                if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().name.equalsIgnoreCase(event.args[0])))
                     sendHelp(event.getChannel());
                 else {
-                    Arrays.stream(Config.Settings.values()).filter(s -> s.name.equalsIgnoreCase(event.args[0]))
-                            .forEach(s -> s.editValue.accept(event.getGuild(), skipOneArg(event.args)));
+                    Arrays.stream(Settings.values()).filter(s -> s.get().name.equalsIgnoreCase(event.args[0]))
+                            .forEach(s -> s.get().editValue.accept(event.getGuild(), skipOneArg(event.args)));
                     event.getChannel().sendMessage("Successfully set new value for the setting").queue();
                 }
             }
@@ -62,12 +63,17 @@ public class SettingsCommand extends Command {
         c.sendMessage(builder.build()).queue();
     }
 
-    private MessageEmbed getSettingDesc(Config.Settings setting, Guild g) {
+    private MessageEmbed getSettingDesc(Settings setting, Guild g) {
         return Main.getDefaultEmbed()
-                .setTitle(setting.name())
-                .addField("Current value", "`" + setting.currentValue.apply(g) + "`", false)
-                .addField("Command to edit", "`" + setting.commandToEdit + "`", false)
-                .addField("Allowed values", setting.allowedValues, false)
+                .setTitle(setting.get().name)
+                .addField("Current value", "`" + setting.get().currentValue.apply(g) + "`", false)
+                .addField("Command to edit", "`" + setting.get().commandToEdit + "`", false)
+                .addField("Allowed values", setting.get().allowedValues, false)
                 .build();
+    }
+
+    @Override
+    public IsSenderAllowed allowed() {
+        return IsSenderAllowed.Administrator;
     }
 }

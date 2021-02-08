@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandAdapter;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
-import net.uku3lig.ukubot.core.Config;
+import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.core.Main;
 
 import java.time.LocalDateTime;
