@@ -1,5 +1,6 @@
 package net.uku3lig.ukubot.subsystems.core;
 
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.hibernate.Database;
@@ -24,5 +25,11 @@ public class GuildHandler extends Subsystem {
         Optional<Config> cfg = Config.getConfigByGuild(event.getGuild());
         if (cfg.isEmpty()) return;
         Database.delete(cfg.get());
+    }
+
+    @Override
+    public void onGenericGuild(@NotNull GenericGuildEvent event) {
+        if (Database.getById(Config.class, event.getGuild().getIdLong()).isPresent()) return;
+        Config.newDefaultConfig(event.getGuild());
     }
 }
