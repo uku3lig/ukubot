@@ -25,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,6 +44,7 @@ public class Main {
     public static final Color embedColor = Color.getHSBColor(1.37f, 1, 0.58f);
 
     public static void main(String[] args) {
+        Instant start = Instant.now();
         SpringApplication.run(Main.class, args);
         ConsoleAdapter.getInstance().start();
         Database.init();
@@ -65,7 +67,8 @@ public class Main {
         try {
             jda.awaitReady();
             runWhenReady.forEach(c -> new Thread(() -> c.accept(jda)).start());
-            logger.info("Bot ready!");
+            Duration timeToStart = Duration.between(start, Instant.now());
+            logger.info("Bot ready! (%s)".formatted(timeToStart));
         } catch (InterruptedException ignored) {
         }
     }
