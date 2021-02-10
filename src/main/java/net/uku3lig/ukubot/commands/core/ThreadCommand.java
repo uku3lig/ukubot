@@ -73,7 +73,7 @@ public class ThreadCommand extends Command {
                                 () -> getByIdAndStop(id, true, event.getChannel()),
                                 event.getChannel())
                                 .source(confirm)
-                                .allowed(allowed())
+                                .allowed(allowed().get())
                                 .build());
                 break;
             case "info":

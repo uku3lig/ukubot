@@ -16,6 +16,10 @@ public enum IsSenderAllowed {
 
     private final Predicate<Member> p;
 
+    public Predicate<Member> get() {
+        return p;
+    }
+
     IsSenderAllowed(Predicate<Member> p) {
         this.p = p;
     }

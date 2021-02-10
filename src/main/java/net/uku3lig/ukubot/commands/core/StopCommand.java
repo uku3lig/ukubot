@@ -30,7 +30,7 @@ public class StopCommand extends Command {
         event.getChannel().sendMessage("Are you sure you want to stop the bot ?")
                 .queue(m -> ReactionListener.yesNo(() -> stop(event.getChannel(), now), event.getChannel())
                         .source(m)
-                        .allowed(IsSenderAllowed.Uku)
+                        .allowed(IsSenderAllowed.Uku.get())
                         .maxUses(1)
                         .timeout(Duration.ofMinutes(1))
                         .build());

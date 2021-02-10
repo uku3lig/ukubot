@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.subsystems.core;
 
 import com.vdurmont.emoji.EmojiParser;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -13,6 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class ReactionListener extends Subsystem {
     @Override
@@ -27,7 +29,7 @@ public class ReactionListener extends Subsystem {
 
     private final Message source;
     private final Map<String, Runnable> actions;
-    private final IsSenderAllowed allowed;
+    private final Predicate<Member> allowed;
     private final int maxUses;
     private int currentUses = 0;
     private final Duration timeout;
@@ -42,7 +44,7 @@ public class ReactionListener extends Subsystem {
         else if (!actions.containsKey(event.getReactionEmote().getEmoji())) return;
         if (actions.keySet().stream()
                 .noneMatch(emoji -> event.getReactionEmote().getEmoji().equals(emoji))) return;
-        if (!allowed.isAllowed(event.getMember())) return;
+        if (!allowed.test(event.getMember())) return;
 
         actions.get(event.getReactionEmote().isEmote() ?
                 event.getReactionEmote().getEmote().getAsMention() :
@@ -70,12 +72,12 @@ public class ReactionListener extends Subsystem {
     private ReactionListener() {
         source = null;
         actions = Collections.emptyMap();
-        allowed = IsSenderAllowed.Default;
+        allowed = IsSenderAllowed.Default.get();
         maxUses = 0;
         timeout = Duration.ZERO;
     }
 
-    private ReactionListener(Message source, Map<String, Runnable> actions, IsSenderAllowed allowed,
+    private ReactionListener(Message source, Map<String, Runnable> actions, Predicate<Member> allowed,
                              int maxUses, Duration timeout) {
         this.source = source;
         this.actions = actions;
@@ -113,7 +115,7 @@ public class ReactionListener extends Subsystem {
     public static class Builder {
         private Message source = null;
         private Map<String, Runnable> actions = null;
-        private IsSenderAllowed allowed = IsSenderAllowed.Default;
+        private Predicate<Member> allowed = IsSenderAllowed.Default.get();
         private int maxUses = 1;
         private Duration timeout = Duration.ofMinutes(1);
 
@@ -140,7 +142,7 @@ public class ReactionListener extends Subsystem {
             return this;
         }
 
-        public Builder allowed(IsSenderAllowed allowed) {
+        public Builder allowed(Predicate<Member> allowed) {
             this.allowed = allowed;
             return this;
         }
