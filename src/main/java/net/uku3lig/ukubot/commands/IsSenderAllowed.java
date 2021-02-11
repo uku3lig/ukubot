@@ -9,9 +9,9 @@ import java.util.function.Predicate;
 public enum IsSenderAllowed {
     Default(member -> true),
     Uku(member -> member.getId().equals("319463560356823050")),
-    Friend(member -> member.getUser().getMutualGuilds().stream().map(Guild::getIdLong)
+    Friend(member -> member.getUser().getMutualGuilds().stream().mapToLong(Guild::getIdLong)
             .anyMatch(id -> id == 796380718481408000L)),
-    Administrator(member -> member.hasPermission(Permission.ADMINISTRATOR) || Friend.isAllowed(member)),
+    Administrator(member -> member.hasPermission(Permission.MANAGE_SERVER)),
     Moderator(member -> member.hasPermission(Permission.MESSAGE_MANAGE) || Administrator.isAllowed(member));
 
     private final Predicate<Member> p;
