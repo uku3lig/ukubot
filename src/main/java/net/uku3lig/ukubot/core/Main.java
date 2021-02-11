@@ -54,8 +54,7 @@ public class Main {
                     .addEventListeners(CommandAdapter.getInstance(), SubsystemAdapter.getInstance())
                     //Cache and intents
                     .disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
-                    .enableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
-                    .enableCache(CacheFlag.ACTIVITY)
+                    .enableIntents(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
                     //fun
                     .setActivity(Activity.playing("vous rendre heureux"))
                     //login to discord
