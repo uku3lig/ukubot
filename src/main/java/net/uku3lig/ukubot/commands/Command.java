@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public abstract class Command {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     public boolean enabled = true;
 
     public abstract String command();
