@@ -2,6 +2,7 @@ package net.uku3lig.ukubot.subsystems.core;
 
 import com.vdurmont.emoji.EmojiParser;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -15,7 +16,12 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PagedEmbed<T> extends Subsystem {
     private static final List<String> reactions =
@@ -36,22 +42,25 @@ public class PagedEmbed<T> extends Subsystem {
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
         if (event.getUser().getId().equalsIgnoreCase(Main.getJda().getSelfUser().getId())) return;
         if (!event.getMessageId().equalsIgnoreCase(message.getId())) return;
-        if (!allowed.isAllowed(event.getMember())) return;
+        if (!allowed.test(event.getMember())) return;
         if (!reactions.contains(event.getReactionEmote().getName())) return;
         //everything ok
         event.getReaction().removeReaction(event.getUser()).queue();
         t = getTimer(t, this);
-        if (event.getReactionEmote().getName().equalsIgnoreCase(reactions.get(0))) currentPage--;
-        else currentPage++;
-        message.editMessage(renderPage(currentPage*pageSize)).queue();
+        if (event.getReactionEmote().getName().equalsIgnoreCase(reactions.get(0)) && currentPage > 0) currentPage--;
+        else if (event.getReactionEmote().getName().equalsIgnoreCase(reactions.get(1))
+                && currentPage+1 < (int) Math.ceil((double) totalSize / pageSize)) currentPage++;
+        else return;
+        message.editMessage(renderPage(currentPage * pageSize)).queue();
     }
 
-    private final List<T> objects;
+    private final BiFunction<Integer, Byte, T[]> objects;
     private Message message;
     private final MessageEmbed embed;
     private final Duration timeout;
-    private final IsSenderAllowed allowed;
-    private final int pageSize;
+    private final Predicate<Member> allowed;
+    private final byte pageSize;
+    private final long totalSize;
     private int currentPage = 0;
     private Timer t = new Timer();
 
@@ -61,17 +70,18 @@ public class PagedEmbed<T> extends Subsystem {
         timeout = null;
         allowed = null;
         pageSize = 0;
+        totalSize = 0;
     }
 
-    public PagedEmbed(List<T> objects, Comparator<T> sorter,
+    public PagedEmbed(BiFunction<Integer, Byte, T[]> objects,
                       TextChannel channel, MessageEmbed embed, Duration timeout,
-                      IsSenderAllowed allowed, int pageSize) {
-        objects.sort(sorter);
+                      Predicate<Member> allowed, byte pageSize, long totalSize) {
         this.objects = objects;
         this.embed = embed;
         this.timeout = timeout;
         this.allowed = allowed;
         this.pageSize = pageSize;
+        this.totalSize = totalSize;
 
         channel.sendMessage(renderPage(0)).queue(msg -> {
             this.message = msg;
@@ -97,32 +107,38 @@ public class PagedEmbed<T> extends Subsystem {
     }
 
     private MessageEmbed renderPage(int offset) {
-        String content = objects.stream()
-                .skip(offset).limit(pageSize)
+        String content = Arrays.stream(objects.apply(offset, pageSize))
+                .limit(pageSize)
                 .map(Objects::toString)
                 .collect(Collectors.joining("\n"));
         return new EmbedBuilder(embed)
                 .setDescription(content)
                 .setFooter("Page %d/%d".formatted(currentPage+1,
-                        (int) Math.ceil((double) objects.size() / pageSize)))
+                        (int) Math.ceil((double) totalSize / pageSize)))
                 .build();
     }
 
-    public static <T> Builder<T> builder(List<T> objects) {
-        return new Builder<>(objects);
+    public static <T> Builder<T> builder(long totalSize, Class<T> klass) {
+        return new Builder<>(totalSize, klass);
     }
 
     public static class Builder<T> {
-        private final List<T> objects;
+        private BiFunction<Integer, Byte, T[]> objects;
         private Comparator<T> sorter;
         private TextChannel channel;
         private MessageEmbed embed;
         private Duration timeout = Duration.ofMinutes(1);
-        private IsSenderAllowed allowed = IsSenderAllowed.Default;
-        private int pageSize = 10;
+        private Predicate<Member> allowed = IsSenderAllowed.Default.get();
+        private byte pageSize = 10;
+        private final long totalSize;
 
-        public Builder(List<T> objects) {
+        public Builder(long totalSize, Class<T> klass) {
+            this.totalSize = totalSize;
+        }
+
+        public Builder<T> objects(BiFunction<Integer, Byte, T[]> objects) {
             this.objects = objects;
+            return this;
         }
 
         public Builder<T> sorter(Comparator<T> sorter) {
@@ -140,12 +156,12 @@ public class PagedEmbed<T> extends Subsystem {
             return this;
         }
 
-        public Builder<T> allowed(IsSenderAllowed allowed) {
+        public Builder<T> allowed(Predicate<Member> allowed) {
             this.allowed = allowed;
             return this;
         }
 
-        public Builder<T> pageSize(int pageSize) {
+        public Builder<T> pageSize(byte pageSize) {
             this.pageSize = pageSize;
             return this;
         }
@@ -156,9 +172,9 @@ public class PagedEmbed<T> extends Subsystem {
         }
 
         public void build() {
-            if (objects == null || objects.isEmpty() || sorter == null || channel == null || embed == null)
+            if (objects == null || sorter == null || channel == null || embed == null)
                 throw new IllegalArgumentException("Error: objects, sorter, channel or embed cannot be null");
-            new PagedEmbed<>(objects, sorter, channel, embed, timeout, allowed, pageSize);
+            new PagedEmbed<>(objects, channel, embed, timeout, allowed, pageSize, totalSize);
         }
     }
 }
