@@ -140,7 +140,7 @@ public class Database {
                     .map(f -> f.apply(builder, query.from(klass)))
                     .toArray(Predicate[]::new);
             query.select(builder.count(query.from(klass))).where(wheres);
-            return s.createQuery(query).getSingleResult();
+            return (long) Math.sqrt(s.createQuery(query).getSingleResult());
         }
     }
 
