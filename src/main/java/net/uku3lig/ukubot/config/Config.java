@@ -23,13 +23,15 @@ public class Config {
     @Transient
     private Guild guild;
 
-    private String prefix = "?";
+    private String prefix;
 
-    private double xpFactor = 0.45;
-    private String levelUpMessage = "GG @mention, you leveled up to (level)!";
+    private double xpFactor;
+    private String levelUpMessage;
 
     protected Config(Guild g) {
         this.prefix = "?";
+        this.xpFactor = 0.35;
+        this.levelUpMessage = "GG @mention, you leveled up to (level)!";
 
         if (g != null) guildId = g.getIdLong();
         if (g != null) Database.saveOrUpdate(this);
