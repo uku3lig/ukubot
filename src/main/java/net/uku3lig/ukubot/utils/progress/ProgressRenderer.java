@@ -1,4 +1,4 @@
-package net.uku3lig.ukubot.progress;
+package net.uku3lig.ukubot.utils.progress;
 
 public class ProgressRenderer {
     public static String render(ProgressStyle style, double progress, int bodyLength) {

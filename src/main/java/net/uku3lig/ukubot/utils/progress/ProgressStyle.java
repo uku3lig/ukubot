@@ -1,4 +1,4 @@
-package net.uku3lig.ukubot.progress;
+package net.uku3lig.ukubot.utils.progress;
 
 public enum ProgressStyle {
     COLORFUL_UNICODE_BLOCK("\r", "\u001b[33m│", "│\u001b[0m", '█', ' ', " ▌"),
