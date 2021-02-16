@@ -46,8 +46,8 @@ public class Main {
     public static void main(String[] args) {
         Instant start = Instant.now();
         SpringApplication.run(Main.class, args);
-        ConsoleAdapter.getInstance().start();
         Database.init();
+        ConsoleAdapter.getInstance().start();
         try {
             jda = JDABuilder.createDefault(getToken())
                     //add our adapters
