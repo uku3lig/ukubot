@@ -1,22 +1,17 @@
 package net.uku3lig.ukubot.commands.xp;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.core.Main;
-import net.uku3lig.ukubot.hibernate.Database;
-import net.uku3lig.ukubot.hibernate.entities.GuildXp;
 import net.uku3lig.ukubot.hibernate.entities.MemberXp;
-import net.uku3lig.ukubot.progress.ProgressRenderer;
-import net.uku3lig.ukubot.progress.ProgressStyle;
+import net.uku3lig.ukubot.utils.progress.ProgressRenderer;
+import net.uku3lig.ukubot.utils.progress.ProgressStyle;
 import net.uku3lig.ukubot.subsystems.xp.ExperienceListener;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class RankCommand extends Command {
