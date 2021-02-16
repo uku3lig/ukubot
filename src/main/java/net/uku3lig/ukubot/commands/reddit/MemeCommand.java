@@ -6,7 +6,7 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.tree.RootCommentNode;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.uku3lig.ukubot.SingleCommand;
+import net.uku3lig.ukubot.commands.SingleCommand;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.core.Main;
 

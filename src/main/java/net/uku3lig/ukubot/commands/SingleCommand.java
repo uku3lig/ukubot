@@ -1,4 +1,4 @@
-package net.uku3lig.ukubot;
+package net.uku3lig.ukubot.commands;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
