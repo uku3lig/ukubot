@@ -21,7 +21,7 @@ public class EnableDisableCommand extends Command {
     @Override
     public void onCommandReceived(CommandReceivedEvent event) {
         if (event.args.length < 2) {
-            sendHelp(event.getChannel());
+            sendHelp(event.getMessage());
             return;
         }
 

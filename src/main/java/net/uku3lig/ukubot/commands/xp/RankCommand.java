@@ -49,7 +49,7 @@ public class RankCommand extends Command {
 
         member.getParent().getMembers().sort(Comparator.comparing(MemberXp::getTotalXp).reversed());
 
-        EmbedBuilder builder = Main.getDefaultEmbed()
+        EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
                 .setTitle("Stats of " + Main.getJda().retrieveUserById(member.getMemberId()).complete().getName() +
                         " (#" + (member.getParent().getMembers().indexOf(member) + 1) + ")")
                 .addField("Level " + member.getLevel(), levelField, false)

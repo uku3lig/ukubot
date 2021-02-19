@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.core.Main;
@@ -53,14 +54,14 @@ public abstract class Command {
      */
     public abstract String help();
 
-    public void sendHelp(TextChannel c) {
+    public void sendHelp(Message m) {
         String desc = "%s\n\nUsage: `%s%s`"
-                .formatted(description(), Config.getEffectiveConfig(c.getGuild()).getPrefix(), help());
+                .formatted(description(), Config.getEffectiveConfig(m.getGuild()).getPrefix(), help());
         if (!aliases().isEmpty()) desc += "\nAliases: " + String.join(", ", aliases());
-        EmbedBuilder builder = Main.getDefaultEmbed()
+        EmbedBuilder builder = Main.getDefaultEmbed(m.getAuthor())
                 .setTitle("Help: %s".formatted(command()))
                 .setDescription(desc)
                 .setTimestamp(LocalDateTime.now());
-        c.sendMessage(builder.build()).queue();
+        m.getChannel().sendMessage(builder.build()).queue();
     }
 }

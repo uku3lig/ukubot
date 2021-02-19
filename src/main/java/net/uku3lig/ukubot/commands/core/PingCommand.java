@@ -18,7 +18,7 @@ public class PingCommand extends Command {
 
     @Override
     public void onCommandReceived(CommandReceivedEvent event) {
-        EmbedBuilder builder = Main.getDefaultEmbed()
+        EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
                 .setTitle("Ping")
                 .addField("Gateway", Main.getJda().getGatewayPing() + " ms", true);
         Main.getJda().getRestPing().queue(ping -> {

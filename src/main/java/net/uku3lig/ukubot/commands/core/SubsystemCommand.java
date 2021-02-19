@@ -31,13 +31,13 @@ public class SubsystemCommand extends Command {
             String subs = SubsystemAdapter.getSubsystems().stream()
                     .map(s -> s.getClass().getSimpleName() + " (" + (s.enabled ? "enabled" : "disabled") + ")")
                     .collect(Collectors.joining("\n"));
-            EmbedBuilder builder = Main.getDefaultEmbed()
+            EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
                     .setTitle("Subsystems")
                     .setDescription(subs);
             event.getChannel().sendMessage(builder.build()).queue();
             return;
         } else if (event.args.length < 2) {
-            sendHelp(event.getChannel());
+            sendHelp(event.getMessage());
             return;
         }
 

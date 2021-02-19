@@ -20,7 +20,7 @@ public class TotalXpCommand extends Command {
     @Override
     public void onCommandReceived(CommandReceivedEvent event) {
         if (event.args.length < 1) {
-            sendHelp(event.getChannel());
+            sendHelp(event.getMessage());
             return;
         }
 

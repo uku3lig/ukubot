@@ -2,6 +2,7 @@ package net.uku3lig.ukubot.commands.core;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.uku3lig.ukubot.commands.Command;
@@ -26,16 +27,16 @@ public class SettingsCommand extends Command {
     @Override
     public void onCommandReceived(CommandReceivedEvent event) {
         switch (event.args.length) {
-            case 0 -> sendHelp(event.getChannel());
+            case 0 -> sendHelp(event.getMessage());
             case 1 -> {
                 if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().name.equalsIgnoreCase(event.args[0])))
-                    sendHelp(event.getChannel());
+                    sendHelp(event.getMessage());
                 else Arrays.stream(Settings.values()).filter(s -> s.get().name.equalsIgnoreCase(event.args[0]))
                         .forEach(s -> event.getChannel().sendMessage(getSettingDesc(s, event.getGuild())).queue());
             }
             default -> {
                 if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().name.equalsIgnoreCase(event.args[0])))
-                    sendHelp(event.getChannel());
+                    sendHelp(event.getMessage());
                 else {
                     Arrays.stream(Settings.values()).filter(s -> s.get().name.equalsIgnoreCase(event.args[0]))
                             .forEach(s -> s.get().editValue.accept(event.getGuild(), skipOneArg(event.args)));
@@ -55,12 +56,14 @@ public class SettingsCommand extends Command {
     }
 
     @Override
-    public void sendHelp(TextChannel c) {
+    public void sendHelp(Message m) {
         EmbedBuilder builder = Main.getDefaultEmbed()
                 .setTitle("Settings")
-                .setDescription("Use `settings <option>` to see more specific help")
-                .addField("Prefix", "`settings prefix`", true);
-        c.sendMessage(builder.build()).queue();
+                .setDescription("Use `settings <option>` to see more specific help");
+        Arrays.stream(Settings.values())
+                .map(s -> new MessageEmbed.Field(s.name(), "`settings " + s.get().name + "`", true))
+                .forEach(builder::addField);
+        m.getChannel().sendMessage(builder.build()).queue();
     }
 
     private MessageEmbed getSettingDesc(Settings setting, Guild g) {

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.uku3lig.ukubot.commands.CommandAdapter;
@@ -114,5 +115,9 @@ public class Main {
                 .setAuthor(botName)
                 .setColor(embedColor)
                 .setTimestamp(Instant.now());
+    }
+
+    public static EmbedBuilder getDefaultEmbed(User u) {
+        return getDefaultEmbed().setFooter("Requested by " + u.getName(), u.getEffectiveAvatarUrl());
     }
 }

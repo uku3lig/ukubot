@@ -33,13 +33,13 @@ public class ThreadCommand extends Command {
     @Override
     public void onCommandReceived(CommandReceivedEvent event) {
         if (event.args.length < 1) {
-            sendHelp(event.getChannel());
+            sendHelp(event.getMessage());
             return;
         }
 
         switch (event.args[0]) {
             case "list":
-                EmbedBuilder builder = Main.getDefaultEmbed()
+                EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
                         .setTitle("Threads")
                         .setTimestamp(LocalDateTime.now());
                 getThreadsByGroup(CommandAdapter.getThreadGroups()).forEach((group, thread) -> {
@@ -53,7 +53,7 @@ public class ThreadCommand extends Command {
                 break;
             case "stop":
                 if (event.args.length < 2) {
-                    sendHelp(event.getChannel());
+                    sendHelp(event.getMessage());
                     break;
                 }
 
@@ -62,7 +62,7 @@ public class ThreadCommand extends Command {
                 break;
             case "fs":
                 if (event.args.length < 2) {
-                    sendHelp(event.getChannel());
+                    sendHelp(event.getMessage());
                     break;
                 }
 
@@ -78,7 +78,7 @@ public class ThreadCommand extends Command {
                 break;
             case "info":
                 if (event.args.length < 2) {
-                    sendHelp(event.getChannel());
+                    sendHelp(event.getMessage());
                     break;
                 }
 
@@ -88,7 +88,7 @@ public class ThreadCommand extends Command {
                         () -> event.getChannel().sendMessage("Error: cannot find thread with this id").queue());
                 break;
             default:
-                sendHelp(event.getChannel());
+                sendHelp(event.getMessage());
         }
     }
 

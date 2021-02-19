@@ -42,7 +42,7 @@ public class FeedbackCommand extends Command {
 
     private boolean sendFeedback(String content, User sender) {
         Main.getJda().openPrivateChannelById("319463560356823050").flatMap(uku -> {
-            EmbedBuilder builder = Main.getDefaultEmbed()
+            EmbedBuilder builder = Main.getDefaultEmbed(sender)
                     .setAuthor(sender.getName(), null, sender.getEffectiveAvatarUrl())
                     .setTitle("New feedback from " + sender.getName())
                     .setDescription(content)

@@ -34,7 +34,7 @@ public class MemeCommand extends SingleCommand {
             return;
         }
         Submission s = r.getSubject();
-        EmbedBuilder builder = Main.getDefaultEmbed()
+        EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
                 .setTitle(s.getTitle(), s.getUrl())
                 .setAuthor("r/" + s.getSubreddit() + " • " + s.getAuthor(), "https://reddit.com/u/" + s.getAuthor())
                 .setImage(s.getUrl())

@@ -43,7 +43,7 @@ public class TopXpCommand extends Command {
                 .sorter(Comparator.comparing(MemberXp::getTotalXp).reversed())
                 .allowed(m -> m.getIdLong() == event.getAuthor().getIdLong())
                 .channel(event.getChannel())
-                .embed(Main.getDefaultEmbed().setTitle("Xp leaderboard").build())
+                .embed(Main.getDefaultEmbed(event.getAuthor()).setTitle("Xp leaderboard").build())
                 .build();
     }
 

@@ -70,7 +70,7 @@ public class RedditCommand extends SingleCommand {
             }
             default -> {
                 if (!Pattern.compile("\\d+").matcher(event.args[1]).matches()) {
-                    sendHelp(event.getChannel());
+                    sendHelp(event.getMessage());
                     return;
                 }
                 int minUpvotes = Integer.parseInt(event.args[1]);
@@ -82,7 +82,7 @@ public class RedditCommand extends SingleCommand {
             }
         }
         SubmissionType type = SubmissionType.of(new URL(s.getUrl()));
-        EmbedBuilder builder = Main.getDefaultEmbed()
+        EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
                 .setTitle(s.getTitle(), s.getUrl())
                 .setAuthor("r/" + s.getSubreddit() + " • " + s.getAuthor() + "(" + s.getAuthorFlairText() + ")",
                         "https://reddit.com/u/" + s.getAuthor())

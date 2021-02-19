@@ -35,7 +35,7 @@ public class HelpCommand extends Command {
                     .formatted(Config.getEffectiveConfig(event.getGuild()).getPrefix());
             String commands = allowed.stream().map(Command::command).collect(Collectors.joining("\n"));
 
-            EmbedBuilder builder = Main.getDefaultEmbed()
+            EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
                     .setTitle("Help")
                     .setDescription(important)
                     .addField("Commands", commands, true)
@@ -48,7 +48,7 @@ public class HelpCommand extends Command {
             event.getChannel().sendMessage("No matching command found with query `%s`".formatted(event.args[0])).queue();
             return;
         }
-        command.get().sendHelp(event.getChannel());
+        command.get().sendHelp(event.getMessage());
     }
 
     @Override
