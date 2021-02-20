@@ -7,11 +7,10 @@ import lombok.Setter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.hibernate.Database;
+import net.uku3lig.ukubot.utils.translation.Language;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 @Entity
 @Getter(AccessLevel.PUBLIC)
@@ -20,18 +19,18 @@ public class Config {
     @Id
     private long guildId;
 
-    @Transient
-    private Guild guild;
-
     private String prefix;
 
     private double xpFactor;
     private String levelUpMessage;
 
+    private String language;
+
     protected Config(Guild g) {
         this.prefix = "?";
         this.xpFactor = 0.35;
         this.levelUpMessage = "GG @mention, you leveled up to (level)!";
+        this.language = Language.English.locale;
 
         if (g != null) guildId = g.getIdLong();
         if (g != null) Database.saveOrUpdate(this);
@@ -39,7 +38,6 @@ public class Config {
 
     //JPA constructor
     protected Config() {
-        Main.runWhenReady(jda -> guild = jda.getGuildById(guildId));
     }
 
     public static Config newDefaultConfig(Guild g, User user) {

@@ -21,7 +21,12 @@ public enum Settings {
             "settings lvlMsg <message>",
             "A message, containing \"`@mention`\" and \"`(level)`\"",
             g -> cfg(g).getLevelUpMessage(),
-            (g, s) -> cfg(g).setLevelUpMessage(String.join(" ", s))));
+            (g, s) -> cfg(g).setLevelUpMessage(String.join(" ", s)))),
+    Language(new Setting<>("language",
+            "setting language <language>",
+            "Any value listed in with `languages` command",
+            g -> cfg(g).getLanguage(),
+            (g, s) -> cfg(g).setLanguage(s[0])));
 
     private final Setting<?> setting;
 
