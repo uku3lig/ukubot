@@ -3,6 +3,7 @@ package net.uku3lig.ukubot.commands.xp;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.subsystems.xp.ExperienceListener;
+import net.uku3lig.ukubot.utils.Util;
 
 import java.text.DecimalFormat;
 
@@ -26,13 +27,8 @@ public class TotalXpCommand extends Command {
 
         long level = Long.parseLong(event.args[0].replaceAll("\\D", ""));
         String message = "Total xp needed for level **`%d`**: `%s`"
-                .formatted(level, formatNum(ExperienceListener.totalXpRequired(level)));
+                .formatted(level, Util.formatNum(ExperienceListener.totalXpRequired(level)));
         event.getChannel().sendMessage(message).queue();
-    }
-
-    private String formatNum(double number) {
-        return new DecimalFormat("#.##").format(number <= 1000 ? number : number / 1000)
-                + (number <= 1000 ? "" : "k");
     }
 
     @Override

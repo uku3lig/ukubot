@@ -3,14 +3,13 @@ package net.uku3lig.ukubot.hibernate.entities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import net.dv8tion.jda.api.entities.Member;
 import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.hibernate.Database;
 import net.uku3lig.ukubot.subsystems.xp.ExperienceListener;
+import net.uku3lig.ukubot.utils.Util;
 
 import javax.persistence.*;
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 @Entity
@@ -96,15 +95,10 @@ public class MemberXp {
         return Objects.hash(parent, memberId);
     }
 
-    private String formatNum(double number) {
-        return new DecimalFormat("#.##").format(number <= 1000 ? number : number / 1000)
-                + (number <= 1000 ? "" : "k");
-    }
-
     @Override
     public String toString() {
         return "**" + Main.getJda().retrieveUserById(memberId).complete().getName() + "**" +
-                " - __Total XP:__ `" + formatNum(totalXp) +
-                "` - __Total messages:__ `" + formatNum(totalXpMsgCount) + "`";
+                " - __Total XP:__ `" + Util.formatNum(totalXp) +
+                "` - __Total messages:__ `" + Util.formatNum(totalXpMsgCount) + "`";
     }
 }

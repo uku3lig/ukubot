@@ -5,6 +5,7 @@ import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.hibernate.entities.MemberXp;
+import net.uku3lig.ukubot.utils.Util;
 import net.uku3lig.ukubot.utils.progress.ProgressRenderer;
 import net.uku3lig.ukubot.utils.progress.ProgressStyle;
 import net.uku3lig.ukubot.subsystems.xp.ExperienceListener;
@@ -32,19 +33,19 @@ public class RankCommand extends Command {
                 event.getGuild());
 
         double progressToNextLvl = member.getCurrentLevelXp() / ExperienceListener.xpToLevelUp(member.getLevel());
-        String levelField = formatNum(member.getCurrentLevelXp()) + " / " +
-                formatNum(ExperienceListener.xpToLevelUp(member.getLevel())) + "\n`" +
+        String levelField = Util.formatNum(member.getCurrentLevelXp()) + " / " +
+                Util.formatNum(ExperienceListener.xpToLevelUp(member.getLevel())) + "\n`" +
                 ProgressRenderer.render(ProgressStyle.UNICODE_BLOCK, progressToNextLvl, 30) + "`";
 
         MemberXp[] membersAround = getMembersAround(member);
         String around = "You";
         if (membersAround[0] != null) {
             String uname = Main.getJda().retrieveUserById(membersAround[0].getMemberId()).complete().getName();
-            around = uname + " > " + formatNum(getXpDiff(member, membersAround[0])) + " > " + around;
+            around = uname + " > " + Util.formatNum(getXpDiff(member, membersAround[0])) + " > " + around;
         }
         if (membersAround[1] != null) {
             String uname = Main.getJda().retrieveUserById(membersAround[1].getMemberId()).complete().getName();
-            around += " > " + formatNum(getXpDiff(member, membersAround[1])) + " > " + uname;
+            around += " > " + Util.formatNum(getXpDiff(member, membersAround[1])) + " > " + uname;
         }
 
         member.getParent().getMembers().sort(Comparator.comparing(MemberXp::getTotalXp).reversed());
@@ -53,18 +54,13 @@ public class RankCommand extends Command {
                 .setTitle("Stats of " + Main.getJda().retrieveUserById(member.getMemberId()).complete().getName() +
                         " (#" + (member.getParent().getMembers().indexOf(member) + 1) + ")")
                 .addField("Level " + member.getLevel(), levelField, false)
-                .addField("Total XP points", formatNum(member.getTotalXp()), false)
-                .addField("Average XP per message", formatNum(member.getAvgXp()), false)
-                .addField("Total messages", formatNum(member.getTotalMsgCount()), true)
-                .addField("Total messages that gave XP", formatNum(member.getTotalXpMsgCount()), true)
+                .addField("Total XP points", Util.formatNum(member.getTotalXp()), false)
+                .addField("Average XP per message", Util.formatNum(member.getAvgXp()), false)
+                .addField("Total messages", Util.formatNum(member.getTotalMsgCount()), true)
+                .addField("Total messages that gave XP", Util.formatNum(member.getTotalXpMsgCount()), true)
                 .addField("Other users", around, false);
 
         event.getChannel().sendMessage(builder.build()).queue();
-    }
-
-    private String formatNum(double number) {
-        return new DecimalFormat("#.##").format(number <= 1000 ? number : number / 1000)
-                + (number <= 1000 ? "" : "k");
     }
 
     private MemberXp[] getMembersAround(MemberXp member) {
