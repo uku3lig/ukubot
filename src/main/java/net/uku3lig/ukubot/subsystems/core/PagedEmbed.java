@@ -15,13 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PagedEmbed<T> extends Subsystem {
     private static final List<String> reactions =
@@ -54,7 +51,7 @@ public class PagedEmbed<T> extends Subsystem {
         message.editMessage(renderPage(currentPage * pageSize)).queue();
     }
 
-    private final BiFunction<Integer, Byte, T[]> objects;
+    private final Function<Offset, T[]> objects;
     private Message message;
     private final MessageEmbed embed;
     private final Duration timeout;
@@ -73,7 +70,7 @@ public class PagedEmbed<T> extends Subsystem {
         totalSize = 0;
     }
 
-    public PagedEmbed(BiFunction<Integer, Byte, T[]> objects,
+    public PagedEmbed(Function<Offset, T[]> objects,
                       TextChannel channel, MessageEmbed embed, Duration timeout,
                       Predicate<Member> allowed, byte pageSize, long totalSize) {
         this.objects = objects;
@@ -107,7 +104,7 @@ public class PagedEmbed<T> extends Subsystem {
     }
 
     private MessageEmbed renderPage(int offset) {
-        String content = Arrays.stream(objects.apply(offset, pageSize))
+        String content = Arrays.stream(objects.apply(new Offset(offset, pageSize)))
                 .limit(pageSize)
                 .map(Objects::toString)
                 .collect(Collectors.joining("\n"));
@@ -123,7 +120,7 @@ public class PagedEmbed<T> extends Subsystem {
     }
 
     public static class Builder<T> {
-        private BiFunction<Integer, Byte, T[]> objects;
+        private Function<Offset, T[]> objects;
         private Comparator<T> sorter;
         private TextChannel channel;
         private MessageEmbed embed;
@@ -136,7 +133,7 @@ public class PagedEmbed<T> extends Subsystem {
             this.totalSize = totalSize;
         }
 
-        public Builder<T> objects(BiFunction<Integer, Byte, T[]> objects) {
+        public Builder<T> objects(Function<Offset, T[]> objects) {
             this.objects = objects;
             return this;
         }
@@ -175,6 +172,16 @@ public class PagedEmbed<T> extends Subsystem {
             if (objects == null || sorter == null || channel == null || embed == null)
                 throw new IllegalArgumentException("Error: objects, sorter, channel or embed cannot be null");
             new PagedEmbed<>(objects, channel, embed, timeout, allowed, pageSize, totalSize);
+        }
+    }
+
+    public static class Offset {
+        public final int offset;
+        public final byte pageSize;
+
+        public Offset(int offset, byte pageSize) {
+            this.offset = offset;
+            this.pageSize = pageSize;
         }
     }
 }

@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class TopXpCommand extends Command {
     @Override
@@ -33,8 +34,8 @@ public class TopXpCommand extends Command {
     @Override
     public void onCommandReceived(CommandReceivedEvent event) {
         GuildXp guild = ExperienceListener.findGuild(event.getGuild().getIdLong());
-        BiFunction<Integer, Byte, MemberXp[]> objects = (o, ps) -> Database.findSorted(
-                MemberXp.class, o, ps,
+        Function<PagedEmbed.Offset, MemberXp[]> objects = o -> Database.findSorted(
+                MemberXp.class, o.offset, o.pageSize,
                 "parent.guildId=" + guild.getGuildId(),
                 Database.Order.desc("totalXp")).toArray(MemberXp[]::new);
 
