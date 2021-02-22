@@ -1,3 +1,20 @@
 {
-  "commands.languages.name": "Languages"
+  "cmd": {
+    "languages": {
+      "name": "Languages"
+    },
+    "info": {
+      "title": "Info about UkuBot",
+      "authors": "Authors",
+      "usage": "Usage",
+      "guilds": "Guilds",
+      "channels": "Channels",
+      "users": "Users",
+      "files": "Files",
+      "lines": "Lines",
+      "chars": "Characters",
+      "commit": "Last update",
+      "links": "Links"
+    }
+  }
 }

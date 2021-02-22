@@ -18,6 +18,9 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
+    maven {
+        url 'https://repo.gradle.org/gradle/libs-releases'
+    }
 }
 
 sourceCompatibility = targetCompatibility = 1.15
@@ -59,6 +62,12 @@ dependencies {
 
     //JRAW (reddit)
     implementation "net.dean.jraw:JRAW:1.1.0"
+
+    //gradle tooling api
+    implementation group: 'org.gradle', name: 'gradle-tooling-api', version: '6.8.2'
+
+    //github
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.122'
 
     //lombok is gathered by plugin
 }

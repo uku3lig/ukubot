@@ -1,3 +1,7 @@
 {
-  "commands.languages.name": "Langues"
+  "cmd": {
+    "languages": {
+      "name": "Langues"
+    }
+  }
 }
