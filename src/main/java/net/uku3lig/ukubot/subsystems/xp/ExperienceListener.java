@@ -2,7 +2,6 @@ package net.uku3lig.ukubot.subsystems.xp;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.core.Main;
@@ -84,7 +83,7 @@ public class ExperienceListener extends Subsystem {
         double xpAmount = computeXpAmount(event.getMessage());
 
         if (member.addXp(xpAmount))
-            event.getChannel().sendMessage(Config.getEffectiveConfig(event.getGuild()).getLevelUpMessage()
+            event.getChannel().sendMessage(Config.getEffectiveConfig(event.getGuild()).getLvlMsg()
                     .replace("@mention", event.getAuthor().getAsMention())
                     .replace("(level)", String.valueOf(member.getLevel()))).queue();
     }

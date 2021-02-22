@@ -26,7 +26,7 @@ public enum Language {
 
     public static Language current(Config cfg) {
         try {
-            return Objects.requireNonNull(of(cfg.getLanguage()));
+            return Objects.requireNonNull(of((String) Settings.Language.get().currentValue(cfg)));
         } catch (Exception e) {
             Settings.Language.get().editValue(cfg, "en_us");
             return Language.English;

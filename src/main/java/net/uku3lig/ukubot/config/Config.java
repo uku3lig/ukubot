@@ -9,10 +9,8 @@ import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.hibernate.Database;
 import net.uku3lig.ukubot.utils.translation.Language;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,14 +24,14 @@ public class Config {
     private String prefix;
 
     private double xpFactor;
-    private String levelUpMessage;
+    private String lvlMsg;
 
     private String language;
 
     protected Config(Guild g) {
         this.prefix = "?";
         this.xpFactor = 0.35;
-        this.levelUpMessage = "GG @mention, you leveled up to (level)!";
+        this.lvlMsg = "GG @mention, you leveled up to (level)!";
         this.language = Language.English.locale;
 
         if (g != null) guildId = g.getIdLong();
@@ -47,16 +45,12 @@ public class Config {
     public static Config newDefaultConfig(Guild g, User user) {
         Objects.requireNonNull(Main.getJda().getUserById(user.getId())).openPrivateChannel().queue(pch ->
                 pch.sendMessage("Thank you for inviting me to your guild **" + g.getName() + "**!\n" +
-                "My default prefix is `?`, and use `?help` to see the available commands.\n" +
-                "If you need help, come to my discord server: https://discord.gg/CN8vCMyq6H\n" +
-                "Do `?invite` to get an invite link for another guild!\n" +
-                "Do `?settings` to change the configuration of the bot.").queue());
+                        "My default prefix is `?`, and use `?help` to see the available commands.\n" +
+                        "If you need help, come to my discord server: https://discord.gg/CN8vCMyq6H\n" +
+                        "Do `?invite` to get an invite link for another guild!\n" +
+                        "Do `?settings` to change the configuration of the bot.\n" +
+                        "Do `?settings language` to change the language.").queue());
         return new Config(g);
-    }
-
-    public void editPrefix(String newPrefix) {
-        prefix = newPrefix;
-        Database.saveOrUpdate(this);
     }
 
     public static Config newDefaultConfig(Guild g) {
@@ -71,10 +65,5 @@ public class Config {
 
     public static Config getEffectiveConfig(Guild g) {
         return getConfigByGuild(g).orElseGet(() -> newDefaultConfig(g));
-    }
-
-    @PrePersist
-    private void checkIfNull() {
-
     }
 }

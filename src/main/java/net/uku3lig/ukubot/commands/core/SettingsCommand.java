@@ -31,21 +31,21 @@ public class SettingsCommand extends Command {
         switch (event.args.length) {
             case 0 -> sendHelp(event.getMessage());
             case 1 -> {
-                if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().name.equalsIgnoreCase(event.args[0])))
+                if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().field.getName().equalsIgnoreCase(event.args[0])))
                     sendHelp(event.getMessage());
-                else Arrays.stream(Settings.values()).filter(s -> s.get().name.equalsIgnoreCase(event.args[0]))
+                else Arrays.stream(Settings.values()).filter(s -> s.get().field.getName().equalsIgnoreCase(event.args[0]))
                         .forEach(s -> event.getChannel().sendMessage(getSettingDesc(s, event.getGuild())).queue());
             }
             default -> {
-                if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().name.equalsIgnoreCase(event.args[0])))
+                if (Arrays.stream(Settings.values()).noneMatch(s -> s.get().field.getName().equalsIgnoreCase(event.args[0])))
                     sendHelp(event.getMessage());
                 else {
-                    Arrays.stream(Settings.values()).filter(s -> s.get().name.equalsIgnoreCase(event.args[0]))
+                    Arrays.stream(Settings.values()).filter(s -> s.get().field.getName().equalsIgnoreCase(event.args[0]))
                             .map(s -> {
                                 if (s.get().editValue(event.getGuild(), Util.skipOneArgAndJoin(event.args)))
-                                    return "Successfully set new value for " + s.get().name;
+                                    return "Successfully set new value for " + s.get().field.getName();
                                 else return "Error: cannot set new value, it is incorrect. Please do `settings %s`"
-                                        .formatted(s.get().name);
+                                        .formatted(s.get().field.getName());
                             }).forEach(s -> event.getChannel().sendMessage(s).queue());
                 }
             }
@@ -63,14 +63,14 @@ public class SettingsCommand extends Command {
                 .setTitle("Settings")
                 .setDescription("Use `settings <option>` to see more specific help");
         Arrays.stream(Settings.values())
-                .map(s -> new MessageEmbed.Field(s.name(), "`settings " + s.get().name + "`", true))
+                .map(s -> new MessageEmbed.Field(s.name(), "`settings " + s.get().field.getName() + "`", true))
                 .forEach(builder::addField);
         m.getChannel().sendMessage(builder.build()).queue();
     }
 
     private MessageEmbed getSettingDesc(Settings setting, Guild g) {
         return Main.getDefaultEmbed()
-                .setTitle(setting.get().name)
+                .setTitle(setting.get().field.getName())
                 .addField("Current value", "`" + setting.get().currentValue(g) + "`", false)
                 .addField("Command to edit", "`" + setting.get().commandToEdit + "`", false)
                 .addField("Allowed values", setting.get().allowedValues, false)
