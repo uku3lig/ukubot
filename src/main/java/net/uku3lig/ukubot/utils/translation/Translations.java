@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.CheckReturnValue;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Translations {
     private static final Map<Language, Translations> instances = Collections.synchronizedMap(new HashMap<>());
@@ -49,7 +49,10 @@ public class Translations {
     @Nullable @CheckReturnValue
     public String getTranslation(@NotNull String key) {
         try {
-            return Objects.requireNonNull(root.get(key).getAsString());
+            AtomicReference<JsonObject> obj = new AtomicReference<>(root);
+            String[] keys = key.split("\\.");
+            Arrays.stream(keys).limit(keys.length - 1).forEach(s -> obj.getAndUpdate(j -> j.getAsJsonObject(s)));
+            return Objects.requireNonNull(obj.get().get(keys[keys.length - 1]).getAsString());
         } catch (Exception e) {
             logger.warn(language.locale + " does not have a value for " + key);
             return null;

@@ -29,7 +29,7 @@ public class LanguagesCommand extends Command {
                 .map(l -> l.name() + ": " + l.locale)
                 .collect(Collectors.joining("\n"));
         EmbedBuilder builder = Main.getDefaultEmbed(event.getAuthor())
-                .setTitle(T.get("commands.languages.name", event).orElse("Languages"))
+                .setTitle(T.get("commands.languages.name", event))
                 .setDescription(languages);
         event.getChannel().sendMessage(builder.build()).queue();
     }

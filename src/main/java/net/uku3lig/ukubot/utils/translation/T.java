@@ -19,15 +19,15 @@ public class T {
         return getI(ge.getGuild());
     }
 
-    public static Optional<String> get(@NotNull String k, @NotNull Language l) {
-        return getI(l).getEffectiveTranslation(k);
+    public static String get(@NotNull String k, @NotNull Language l) {
+        return getI(l).getEffectiveTranslation(k).get();
     }
 
-    public static Optional<String> get(@NotNull String k, @NotNull Guild g) {
+    public static String get(@NotNull String k, @NotNull Guild g) {
         return get(k, Language.current(g));
     }
 
-    public static Optional<String> get(@NotNull String k, @NotNull GenericGuildEvent ge) {
+    public static String get(@NotNull String k, @NotNull GenericGuildEvent ge) {
         return get(k, ge.getGuild());
     }
 }
