@@ -9,8 +9,12 @@ import net.uku3lig.ukubot.core.Main;
 import net.uku3lig.ukubot.hibernate.Database;
 import net.uku3lig.ukubot.utils.translation.Language;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Getter(AccessLevel.PUBLIC)
@@ -67,5 +71,10 @@ public class Config {
 
     public static Config getEffectiveConfig(Guild g) {
         return getConfigByGuild(g).orElseGet(() -> newDefaultConfig(g));
+    }
+
+    @PrePersist
+    private void checkIfNull() {
+
     }
 }

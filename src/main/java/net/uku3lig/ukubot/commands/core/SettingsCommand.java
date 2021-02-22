@@ -10,8 +10,10 @@ import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.commands.IsSenderAllowed;
 import net.uku3lig.ukubot.config.Settings;
 import net.uku3lig.ukubot.core.Main;
+import net.uku3lig.ukubot.utils.Util;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class SettingsCommand extends Command {
     @Override
@@ -39,15 +41,15 @@ public class SettingsCommand extends Command {
                     sendHelp(event.getMessage());
                 else {
                     Arrays.stream(Settings.values()).filter(s -> s.get().name.equalsIgnoreCase(event.args[0]))
-                            .forEach(s -> s.get().editValue.accept(event.getGuild(), skipOneArg(event.args)));
-                    event.getChannel().sendMessage("Successfully set new value for the setting").queue();
+                            .map(s -> {
+                                if (s.get().editValue(event.getGuild(), Util.skipOneArgAndJoin(event.args)))
+                                    return "Successfully set new value for " + s.get().name;
+                                else return "Error: cannot set new value, it is incorrect. Please do `settings %s`"
+                                        .formatted(s.get().name);
+                            }).forEach(s -> event.getChannel().sendMessage(s).queue());
                 }
             }
         }
-    }
-
-    private String[] skipOneArg(String[] args) {
-        return Arrays.stream(args).skip(1).toArray(String[]::new);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class SettingsCommand extends Command {
     private MessageEmbed getSettingDesc(Settings setting, Guild g) {
         return Main.getDefaultEmbed()
                 .setTitle(setting.get().name)
-                .addField("Current value", "`" + setting.get().currentValue.apply(g) + "`", false)
+                .addField("Current value", "`" + setting.get().currentValue(g) + "`", false)
                 .addField("Command to edit", "`" + setting.get().commandToEdit + "`", false)
                 .addField("Allowed values", setting.get().allowedValues, false)
                 .build();

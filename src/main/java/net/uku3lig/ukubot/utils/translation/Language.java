@@ -3,8 +3,12 @@ package net.uku3lig.ukubot.utils.translation;
 import net.dv8tion.jda.api.entities.Guild;
 import net.uku3lig.ukubot.config.Config;
 import net.uku3lig.ukubot.config.Settings;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.CheckReturnValue;
 import java.util.Arrays;
+import java.util.Objects;
 
 public enum Language {
     English("en_us"),
@@ -17,14 +21,22 @@ public enum Language {
     }
 
     public static Language current(Guild g) {
-        Config cfg = Config.getEffectiveConfig(g);
+        return current(Config.getEffectiveConfig(g));
+    }
+
+    public static Language current(Config cfg) {
         try {
-            return Arrays.stream(Language.values())
-                    .filter(l -> l.locale.equalsIgnoreCase(cfg.getLanguage()))
-                    .findFirst().orElseGet(() -> Language.valueOf(cfg.getLanguage()));
-        } catch (IllegalArgumentException e) {
-            Settings.Language.get().editValue.accept(g, new String[]{"en_us"});
+            return Objects.requireNonNull(of(cfg.getLanguage()));
+        } catch (Exception e) {
+            Settings.Language.get().editValue(cfg, "en_us");
             return Language.English;
         }
+    }
+
+    @Nullable @CheckReturnValue
+    public static Language of(@NotNull String name) {
+        return Arrays.stream(values())
+                .filter(l -> l.locale.equalsIgnoreCase(name) || l.name().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
     }
 }
