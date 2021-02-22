@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.uku3lig.ukubot.commands.Command;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.core.Main;
+import net.uku3lig.ukubot.spring.OAuth2Controller;
 import net.uku3lig.ukubot.utils.Util;
 import net.uku3lig.ukubot.utils.translation.T;
 import org.gradle.tooling.GradleConnector;
@@ -100,9 +101,11 @@ public class InfoCommand extends Command {
                         "%d (%d %s)".formatted(totalFiles.size(), totalJavaFiles, java), true)
                 .addField(T.get("cmd.info.lines", event), String.valueOf(totalLines), true)
                 .addField(T.get("cmd.info.chars", event), String.valueOf(totalChars), true)
-                .addField(T.get("cmd.info.commit", event), "%s | %s ([`%s`](%s))"
+                .addField(T.get("cmd.info.commit", event), "%s | %s | [`%s`](%s)"
                         .formatted(lastCommit.getCommitShortInfo().getMessage(), lastCommit.getAuthor().getName(),
-                                sha1.substring(0, 7), lastCommit.getHtmlUrl().toString()), false);
+                                sha1.substring(0, 7), lastCommit.getHtmlUrl().toString()), false)
+                .addField(T.get("cmd.info.links", event), "[source](https://github.com/uku3lig/ukubot) | " +
+                        "[invite](%s)".formatted(OAuth2Controller.getInviteUrl()), false);
 
         m.editMessage(" ").embed(builder.build()).queue();
     }

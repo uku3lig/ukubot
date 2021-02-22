@@ -34,8 +34,13 @@ public class OAuth2Controller {
         return new ModelAndView("redirect:https://discord.com/oauth2/authorized");
     }
 
-    private DiscordOAuth getOAuth() {
+    private static DiscordOAuth getOAuth() {
         String clientSecret = DockerSecrets.getSecretOrFile("client_secret", Path.of("./CLIENT_SECRET"));
         return new DiscordOAuth(clientID, clientSecret, redirectUri, new String[] {"identify"});
+    }
+
+    public static String getInviteUrl() {
+        if (oAuth == null) oAuth = getOAuth();
+        return oAuth.getAuthorizationURL(null);
     }
 }
