@@ -41,7 +41,6 @@ public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public static final String botName = "UkuBot";
     public static final Color embedColor = Color.getHSBColor(1.37f, 1, 0.58f);
 
     public static void main(String[] args) {
@@ -112,7 +111,6 @@ public class Main {
 
     public static EmbedBuilder getDefaultEmbed() {
         return new EmbedBuilder()
-                .setAuthor(botName)
                 .setColor(embedColor)
                 .setTimestamp(Instant.now());
     }
