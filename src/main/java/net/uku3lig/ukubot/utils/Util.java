@@ -3,6 +3,7 @@ package net.uku3lig.ukubot.utils;
 import java.io.*;
 import java.text.CharacterIterator;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -11,6 +12,12 @@ public class Util {
     public static String formatNum(double number) {
         return new DecimalFormat("#.##").format(number <= 1000 ? number : number / 1000)
                 + (number <= 1000 ? "" : "k");
+    }
+
+    public static String spaces(long number) {
+        DecimalFormatSymbols space = DecimalFormatSymbols.getInstance();
+        space.setGroupingSeparator(' ');
+        return new DecimalFormat("#,###", space).format(number);
     }
 
     public static String humanReadableByteCount(long bytes) {

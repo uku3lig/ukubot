@@ -99,8 +99,8 @@ public class InfoCommand extends Command {
                 .addField(T.get("cmd.info.users", event), String.valueOf(users), true)
                 .addField(T.get("cmd.info.files", event),
                         "%d (%d %s)".formatted(totalFiles.size(), totalJavaFiles, java), true)
-                .addField(T.get("cmd.info.lines", event), String.valueOf(totalLines), true)
-                .addField(T.get("cmd.info.chars", event), String.valueOf(totalChars), true)
+                .addField(T.get("cmd.info.lines", event), Util.spaces(totalLines), true)
+                .addField(T.get("cmd.info.chars", event), Util.spaces(totalChars), true)
                 .addField(T.get("cmd.info.commit", event), "%s | %s | [`%s`](%s)"
                         .formatted(lastCommit.getCommitShortInfo().getMessage(), lastCommit.getAuthor().getName(),
                                 sha1.substring(0, 7), lastCommit.getHtmlUrl().toString()), false)
