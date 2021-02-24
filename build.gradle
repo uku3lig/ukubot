@@ -29,6 +29,9 @@ dependencies {
     // The holy JDA
     implementation group: 'net.dv8tion', name: 'JDA', version: '4.2.0_214'
 
+    //webhooks
+    implementation group: 'club.minnced', name: 'discord-webhooks', version: '0.5.5-rc'
+
     // === Logging ==
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'

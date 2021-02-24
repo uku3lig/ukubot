@@ -1,5 +1,10 @@
 package net.uku3lig.ukubot.core;
 
+import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.WebhookClientBuilder;
+import club.minnced.discord.webhook.WebhookCluster;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -24,12 +29,14 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -38,10 +45,11 @@ public class Main {
     @Getter
     private static JDA jda = null;
     private static final Set<Consumer<JDA>> runWhenReady = new HashSet<>();
+    private static final WebhookCluster webhooks = new WebhookCluster();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public static final Color embedColor = Color.getHSBColor(1.37f, 1, 0.58f);
+    public static final int embedColor = 0x009420;
 
     public static void main(String[] args) {
         Instant start = Instant.now();
@@ -112,10 +120,32 @@ public class Main {
     public static EmbedBuilder getDefaultEmbed() {
         return new EmbedBuilder()
                 .setColor(embedColor)
-                .setTimestamp(Instant.now());
+                .setTimestamp(Instant.now())
+                .setFooter("UkuBot", jda.getSelfUser().getEffectiveAvatarUrl());
     }
 
     public static EmbedBuilder getDefaultEmbed(User u) {
         return getDefaultEmbed().setFooter("Requested by " + u.getName(), u.getEffectiveAvatarUrl());
+    }
+
+    private static final AtomicLong webhookIdSupplier = new AtomicLong(0);
+
+    public static WebhookClient createWebhook(String url) {
+        WebhookClient webhook = new WebhookClientBuilder(url)
+                .setThreadFactory(job -> {
+                    Thread t = new Thread(job);
+                    t.setName("Webhook-" + webhookIdSupplier.getAndIncrement());
+                    t.setDaemon(true);
+                    return t;
+                }).setWait(true).build();
+        webhooks.addWebhooks(webhook);
+        return webhook;
+    }
+
+    public static WebhookEmbedBuilder getDefaultWebhookEmbed() {
+        return new WebhookEmbedBuilder()
+                .setTimestamp(Instant.now())
+                .setColor(embedColor)
+                .setFooter(new WebhookEmbed.EmbedFooter("UkuBot Webhook", jda.getSelfUser().getEffectiveAvatarUrl()));
     }
 }

@@ -5,7 +5,10 @@
             <pattern>[%d{HH:mm:ss.SSS}] %boldCyan(%-5.-34thread) %boldGreen(%-5.-20logger{0}) %highlight(%-6level) %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="Discord" class="net.uku3lig.ukubot.utils.DiscordLogger" />
+
     <root level="info">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="Discord" />
     </root>
 </configuration>

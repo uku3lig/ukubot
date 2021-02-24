@@ -11,7 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,7 +33,6 @@ public class CommandAdapter extends ListenerAdapter {
     private static final AtomicLong executedCommands = new AtomicLong(0);
 
     private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
 
 
     public static CommandAdapter getInstance() {
@@ -53,7 +55,8 @@ public class CommandAdapter extends ListenerAdapter {
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event instanceof CommandReceivedEvent) return;
         //If message doesn't start with guild prefix, not a command
-        if (!event.getMessage().getContentRaw().startsWith(Config.getEffectiveConfig(event.getGuild()).getPrefix())) return;
+        if (!event.getMessage().getContentRaw().startsWith(Config.getEffectiveConfig(event.getGuild()).getPrefix()))
+            return;
         //We don't want self loops
         if (event.getAuthor().getId().equals(Main.getJda().getSelfUser().getId())) return;
         //Bot loops neither
@@ -87,7 +90,7 @@ public class CommandAdapter extends ListenerAdapter {
                             .forEach(group -> {
                                 Thread t = new Thread(group,
                                         () -> command.onCommandReceived(event),
-                                        "CommandInstance" + executedCommands.getAndIncrement() + "-" + System.currentTimeMillis());
+                                        "Command" + executedCommands.getAndIncrement() + "-" + Instant.now().getEpochSecond());
                                 t.setUncaughtExceptionHandler((thread, e) -> exceptionThrown(thread, e, event.getChannel()));
                                 t.start();
                             });
@@ -101,7 +104,8 @@ public class CommandAdapter extends ListenerAdapter {
     private void exceptionThrown(Thread thread, Throwable exception, TextChannel channel) {
         if (exception instanceof ThreadDeath) return;
         channel.sendMessage("An unexpected error occurred").queue();
-        logger.error("Thread %s (%s) threw an exception".formatted(thread.getName(), thread.getThreadGroup().getName()));
+        logger.error("Command %s threw a %s: %s".formatted(thread.getThreadGroup().getName(),
+                exception.getClass().getSimpleName(), exception.getMessage()));
         exception.printStackTrace();
     }
 
