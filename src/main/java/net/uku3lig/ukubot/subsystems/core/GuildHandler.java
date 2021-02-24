@@ -21,6 +21,11 @@ public class GuildHandler extends Subsystem {
     }
 
     @Override
+    public boolean isEnabledByDefault() {
+        return true;
+    }
+
+    @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
         Optional<Config> cfg = Config.getConfigByGuild(event.getGuild());
         if (cfg.isEmpty()) return;
