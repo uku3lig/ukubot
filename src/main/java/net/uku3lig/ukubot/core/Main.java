@@ -17,19 +17,17 @@ import net.uku3lig.ukubot.commands.CommandAdapter;
 import net.uku3lig.ukubot.console.ConsoleAdapter;
 import net.uku3lig.ukubot.hibernate.Database;
 import net.uku3lig.ukubot.subsystems.SubsystemAdapter;
-import net.uku3lig.ukubot.utils.DockerSecrets;
+import net.uku3lig.ukubot.utils.Secrets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.security.auth.login.LoginException;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -57,7 +55,7 @@ public class Main {
         Database.init();
         ConsoleAdapter.getInstance().start();
         try {
-            jda = JDABuilder.createDefault(getToken())
+            jda = JDABuilder.createDefault(Secrets.findSecret("TOKEN"))
                     //add our adapters
                     .addEventListeners(CommandAdapter.getInstance(), SubsystemAdapter.getInstance())
                     //Cache and intents
@@ -77,27 +75,6 @@ public class Main {
             Duration timeToStart = Duration.between(start, Instant.now());
             logger.info("Bot ready! (%s)".formatted(timeToStart));
         } catch (InterruptedException ignored) {
-        }
-    }
-
-    private static String getToken() {
-        if (DockerSecrets.getSecret("token").isPresent()) return DockerSecrets.getSecret("token").get();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("./TOKEN"));
-            String token = reader.readLine();
-            if (token == null || token.isEmpty() || token.isBlank()) {
-                logger.error("Cannot find token in file './TOKEN', are you sure it is there ?");
-                Runtime.getRuntime().exit(1);
-            }
-            return token.strip();
-        } catch (FileNotFoundException e) {
-            logger.error("Cannot find token, check if 'TOKEN' exists");
-            Runtime.getRuntime().exit(1);
-            return null;
-        } catch (IOException e) {
-            logger.error("An error happened while starting the bot", e);
-            Runtime.getRuntime().exit(1);
-            return null;
         }
     }
 

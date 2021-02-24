@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.uku3lig.ukubot.commands.SingleCommand;
 import net.uku3lig.ukubot.commands.CommandReceivedEvent;
 import net.uku3lig.ukubot.core.Main;
-import net.uku3lig.ukubot.utils.DockerSecrets;
+import net.uku3lig.ukubot.utils.Secrets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +43,8 @@ public class RedditCommand extends SingleCommand {
     }
 
     public RedditCommand() {
-        String password = DockerSecrets.getSecretOrFile("reddit_password", Path.of("./REDDIT_PASSWORD"));
-        String clientSecret = DockerSecrets.getSecretOrFile("reddit_client_secret", Path.of("./REDDIT_CS"));
+        String password = Secrets.findSecret("REDDIT_PASSWORD");
+        String clientSecret = Secrets.findSecret("REDDIT_CS");
         Credentials credentials = Credentials.script("uku3lig", password, "CnkSx8zfOvJzbg", clientSecret);
         UserAgent userAgent = new UserAgent("bot", "net.uku3lig.ukubot", "1.0.1", "UkuBot");
         reddit = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), credentials);

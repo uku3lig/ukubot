@@ -1,30 +1,19 @@
 package net.uku3lig.ukubot.utils;
 
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import lombok.Getter;
-import lombok.Setter;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.uku3lig.ukubot.core.Main;
 import org.gradle.internal.impldep.com.google.common.base.Splitter;
 
-import java.net.MalformedURLException;
 import java.nio.file.Path;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 public class DiscordLogger extends AppenderBase<ILoggingEvent> {
-    private final WebhookClient webhook = Main.createWebhook(DockerSecrets.getSecretOrFile("", Path.of("WH_LOGS")));
+    private final WebhookClient webhook = Main.createWebhook(Secrets.findSecret("WH_LOGS"));
 
     @Override
     protected void append(ILoggingEvent event) {

@@ -5,7 +5,7 @@ import io.mokulu.discord.oauth.DiscordOAuth;
 import io.mokulu.discord.oauth.model.TokensResponse;
 import io.mokulu.discord.oauth.model.User;
 import net.uku3lig.ukubot.config.Config;
-import net.uku3lig.ukubot.utils.DockerSecrets;
+import net.uku3lig.ukubot.utils.Secrets;
 import net.uku3lig.ukubot.core.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class OAuth2Controller {
     }
 
     private static DiscordOAuth getOAuth() {
-        String clientSecret = DockerSecrets.getSecretOrFile("client_secret", Path.of("./CLIENT_SECRET"));
+        String clientSecret = Secrets.findSecret("CLIENT_SECRET");
         return new DiscordOAuth(clientID, clientSecret, redirectUri, new String[] {"identify"});
     }
 

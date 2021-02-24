@@ -1,9 +1,8 @@
 package net.uku3lig.ukubot.hibernate;
 
 import lombok.Getter;
-import net.uku3lig.ukubot.utils.DockerSecrets;
+import net.uku3lig.ukubot.utils.Secrets;
 import net.uku3lig.ukubot.utils.ClassScanner;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -18,7 +17,6 @@ import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Database {
@@ -40,8 +38,8 @@ public class Database {
             ClassScanner.findEntities("net.uku3lig.ukubot")
                     .forEach(cfg::addAnnotatedClass);
 
-            if (DockerSecrets.getSecret("db_pwd").isPresent())
-                cfg.setProperty("hibernate.connection.password", DockerSecrets.getSecret("db_pwd").get());
+            if (Secrets.getSecret("DB_PASS").isPresent())
+                cfg.setProperty("hibernate.connection.password", Secrets.getSecret("DB_PASS").get());
 
             final ServiceRegistry registry = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
             factory = cfg.buildSessionFactory(registry);
