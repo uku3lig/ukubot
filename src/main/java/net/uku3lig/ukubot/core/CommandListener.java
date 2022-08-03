@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.core;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -29,7 +30,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onGenericCommandInteraction(@NotNull GenericCommandInteractionEvent event) {
         commands.stream()
                 .filter(c -> c.getCommandData().getName().equals(event.getName()))
                 .forEach(c -> c.onCommand(event));
