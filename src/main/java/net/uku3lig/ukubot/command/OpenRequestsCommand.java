@@ -59,7 +59,10 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {
-        event.replyModal(getModal()).queue();
+        if (event.getGuild() == null) return;
+        if (Boolean.TRUE.equals(Main.getGuildConfig(event.getGuild()).getOrElse("requests_open", true)))
+            event.replyModal(getModal()).queue();
+        else event.reply("Requests are closed, please retry later.").setEphemeral(true).queue();
     }
 
     @Override
