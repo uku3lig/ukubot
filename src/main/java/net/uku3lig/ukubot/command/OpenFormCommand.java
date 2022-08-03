@@ -2,6 +2,7 @@ package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -22,7 +23,7 @@ public class OpenFormCommand implements ICommand, IModal, IButton {
     }
 
     @Override
-    public void onCommand(SlashCommandInteractionEvent event) {
+    public void onCommand(GenericCommandInteractionEvent event) {
         if (event.getGuild() == null) event.reply("no guild? :nobitches:").queue();
         else event.reply("omg a button").addActionRow(getButtonData().getButton(event.getGuild())).queue();
     }

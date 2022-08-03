@@ -1,6 +1,7 @@
 package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -16,7 +17,7 @@ public class StopCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(SlashCommandInteractionEvent event) {
+    public void onCommand(GenericCommandInteractionEvent event) {
         event.reply("shutting down").queue(i -> Main.getJda().shutdown());
     }
 }
