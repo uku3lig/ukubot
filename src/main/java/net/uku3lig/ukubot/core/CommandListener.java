@@ -2,6 +2,7 @@ package net.uku3lig.ukubot.core;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.uku3lig.ukubot.Main;
@@ -9,17 +10,20 @@ import net.uku3lig.ukubot.util.ClassScanner;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 public class CommandListener extends ListenerAdapter {
     private final Set<ICommand> commands;
     private final Set<IModal> modals;
+    private final Set<IButton> buttons;
 
     public CommandListener() {
         this.commands = ClassScanner.findSubtypes(ICommand.class);
         this.modals = ClassScanner.findSubtypes(IModal.class);
+        this.buttons = ClassScanner.findSubtypes(IButton.class);
         Main.runWhenReady(jda -> {
-            Collection<CommandData> data = commands.stream().map(ICommand::getData).toList();
+            Collection<CommandData> data = commands.stream().map(ICommand::getCommandData).toList();
             jda.getGuilds().forEach(g -> g.updateCommands().addCommands(data).queue());
         });
     }
@@ -27,7 +31,7 @@ public class CommandListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         commands.stream()
-                .filter(c -> c.getData().getName().equals(event.getName()))
+                .filter(c -> c.getCommandData().getName().equals(event.getName()))
                 .forEach(c -> c.onCommand(event));
     }
 
@@ -36,5 +40,13 @@ public class CommandListener extends ListenerAdapter {
         modals.stream()
                 .filter(m -> m.getModal().getId().equals(event.getModalId()))
                 .forEach(m -> m.onModal(event));
+    }
+
+    @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        if (event.getGuild() == null) return;
+        buttons.stream()
+                .filter(b -> Objects.equals(b.getButtonData().getButton(event.getGuild()).getId(), event.getButton().getId()))
+                .forEach(b -> b.onButtonClick(event));
     }
 }

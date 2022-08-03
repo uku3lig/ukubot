@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 public interface ICommand {
-    CommandData getData();
+    CommandData getCommandData();
 
     void onCommand(SlashCommandInteractionEvent event);
 }

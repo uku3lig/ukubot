@@ -10,7 +10,7 @@ import net.uku3lig.ukubot.core.ICommand;
 
 public class StopCommand implements ICommand {
     @Override
-    public CommandData getData() {
+    public CommandData getCommandData() {
         return Commands.slash("stop", "stops the bot")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR));
     }
