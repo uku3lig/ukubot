@@ -88,7 +88,6 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setAuthor(event.getUser().getAsTag(), null, event.getUser().getEffectiveAvatarUrl())
-                .setFooter(event.getUser().getId())
                 .setTimestamp(Instant.now());
 
         event.getValues().stream()
