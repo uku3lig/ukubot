@@ -1,6 +1,8 @@
 package net.uku3lig.ukubot.command;
 
+import com.electronwill.nightconfig.core.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
@@ -19,7 +21,6 @@ import net.uku3lig.ukubot.core.ICommand;
 import net.uku3lig.ukubot.core.IModal;
 
 import java.time.Instant;
-import java.util.Objects;
 
 public class OpenRequestsCommand implements ICommand, IButton, IModal {
     @Override
@@ -32,6 +33,13 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
     public void onCommand(GenericCommandInteractionEvent event) {
         if (!event.getChannelType().isMessage()) return;
         if (event.getGuild() == null) return;
+
+        Config config = Main.getGuildConfig(event.getGuild());
+        TextChannel channel = Main.getJda().getTextChannelById(config.getLongOrElse("form_channel", 0));
+        if (channel == null) {
+            event.reply("Please set a form channel using the /config command.").setEphemeral(true).queue();
+            return;
+        }
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setTitle("Request a mod/plugin")
@@ -86,6 +94,13 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
             return;
         }
 
+        Config config = Main.getGuildConfig(event.getGuild());
+        TextChannel channel = Main.getJda().getTextChannelById(config.getLongOrElse("form_channel", 0));
+        if (channel == null) {
+            event.reply("The owner didn't set a form result channel.").setEphemeral(true).queue();
+            return;
+        }
+
         EmbedBuilder builder = new EmbedBuilder()
                 .setAuthor(event.getUser().getAsTag(), null, event.getUser().getEffectiveAvatarUrl())
                 .setTimestamp(Instant.now());
@@ -94,8 +109,7 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
                 .filter(m -> !m.getAsString().isEmpty() && !m.getAsString().isBlank())
                 .forEach(m -> builder.addField(m.getId(), m.getAsString(), false));
 
-        Objects.requireNonNull(Main.getJda().getTextChannelById(1002390384082702426L))
-                .sendMessageEmbeds(builder.build())
+        channel.sendMessageEmbeds(builder.build())
                 .setActionRow(new AcceptButton().getButton(event.getGuild()), new RejectButton().getButton(event.getGuild()))
                 .flatMap(m -> event.reply("Thanks for your submission. You will receive a reply shortly.").setEphemeral(true))
                 .queue();

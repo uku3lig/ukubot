@@ -116,3 +116,6 @@ gradle-app.setting
 
 # Bot token
 UKUBOT_TOKEN
+
+# Config
+ukubot_config.toml
