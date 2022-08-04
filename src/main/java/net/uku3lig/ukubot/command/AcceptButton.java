@@ -39,8 +39,9 @@ public class AcceptButton implements IButton {
         event.getGuild().retrieveMemberById(opt.orElse("0"))
                 .flatMap(member -> category.createTextChannel(member.getUser().getAsTag())
                         .addMemberPermissionOverride(member.getIdLong(), EnumSet.of(Permission.VIEW_CHANNEL), EnumSet.noneOf(Permission.class)))
-                .flatMap(c -> c.sendMessageEmbeds(builder.build()).setActionRow(new CloseTicketButton().getButton(event.getGuild())))
-                .flatMap(m -> event.editMessageEmbeds(builder.setDescription(m.getChannel().getAsMention()).build()).setActionRows())
+                .flatMap(c -> c.sendMessageEmbeds(builder.build()))
+                .flatMap(m -> event.editMessageEmbeds(builder.setDescription(m.getChannel().getAsMention()).build())
+                        .setActionRow(new FinishedButton().getButton(event.getGuild()), new DiscontinuedButton().getButton(event.getGuild())))
                 .queue();
     }
 }
