@@ -31,8 +31,8 @@ public class RejectButton implements IButton, IModal {
                 .build();
 
         Modal.Builder builder = getModal().createCopy();
-        MessageEmbed.AuthorInfo info = edited.getAuthor();
-        if (info != null) builder.addActionRow(TextInput.create("user", "User", TextInputStyle.SHORT).setValue(info.getName()).build());
+        MessageEmbed.Footer info = edited.getFooter();
+        if (info != null) builder.addActionRow(TextInput.create("user", "User", TextInputStyle.SHORT).setValue(info.getText()).build());
 
         event.replyModal(builder.build())
                 .flatMap(v -> event.getHook().editOriginalEmbeds(edited).setActionRows())
@@ -53,7 +53,7 @@ public class RejectButton implements IButton, IModal {
     @Override
     public void onModal(ModalInteractionEvent event) {
         ModalMapping user = event.getValue("user");
-        if (user == null) {
+        if (user == null || user.getAsString().isEmpty()) {
             event.reply("Request rejected. No DM sent.").setEphemeral(true).queue();
             return;
         }
@@ -67,7 +67,7 @@ public class RejectButton implements IButton, IModal {
 
         String finalReasonText = reasonText;
         event.reply("Request rejected.").setEphemeral(true)
-                .flatMap(h -> Objects.requireNonNull(Main.getJda().getUserByTag(user.getAsString())).openPrivateChannel())
+                .flatMap(h -> Objects.requireNonNull(Main.getJda().getUserById(user.getAsString())).openPrivateChannel())
                 .flatMap(c -> c.sendMessage("Your mod request was rejected. " + finalReasonText))
                 .queue();
     }
