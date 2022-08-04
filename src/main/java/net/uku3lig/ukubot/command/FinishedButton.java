@@ -2,15 +2,21 @@ package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.uku3lig.ukubot.core.ButtonData;
 import net.uku3lig.ukubot.core.IButton;
+import net.uku3lig.ukubot.core.IModal;
 import net.uku3lig.ukubot.util.Util;
 
+import java.util.Objects;
 import java.util.Optional;
 
-public class FinishedButton implements IButton {
+public class FinishedButton implements IButton, IModal {
     @Override
     public ButtonData getButtonData() {
         return new ButtonData(Button.primary("mod_finished", "Mark as finished"));
@@ -32,11 +38,34 @@ public class FinishedButton implements IButton {
             return;
         }
 
-        channel.getManager().sync()
+        event.replyModal(Util.addUserToModal(edited, getModal()))
+                .flatMap(v -> channel.getManager().sync())
                 .flatMap(v -> event.editMessageEmbeds(edited).setActionRows())
                 .flatMap(v -> event.getHook().sendMessage("Closed ticket for being finished.").setEphemeral(true))
                 .queue();
+    }
 
-        // TODO modal to provide info about the finished mod
+    @Override
+    public Modal getModal() {
+        TextInput link = TextInput.create("mod_link", "Link to the mod", TextInputStyle.SHORT)
+                .setPlaceholder("https://modrinth.com/mod/potioncounter")
+                .build();
+
+        TextInput received = TextInput.create("mod_received", "Amount received", TextInputStyle.SHORT)
+                .setPlaceholder("15€")
+                .build();
+
+        return Modal.create("mod_finished", "Finshed Mod")
+                .addActionRow(link)
+                .addActionRow(received)
+                .build();
+    }
+
+    @Override
+    public void onModal(ModalInteractionEvent event) {
+        String link = Objects.requireNonNull(event.getValue("mod_link")).getAsString();
+
+        // TODO send embed in channel
+        Util.sendRejectionToUser(event, "finished", link).queue();
     }
 }
