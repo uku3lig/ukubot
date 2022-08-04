@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.uku3lig.ukubot.core.CommandListener;
 
 import javax.security.auth.login.LoginException;
@@ -34,6 +35,7 @@ public class Main {
         jda = JDABuilder.createDefault(readToken())
                 .setActivity(Activity.watching("your mod requests"))
                 .addEventListeners(new CommandListener())
+                .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .build()
                 .awaitReady();
 

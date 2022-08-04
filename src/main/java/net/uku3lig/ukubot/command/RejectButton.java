@@ -2,6 +2,7 @@ package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.Modal;
@@ -15,7 +16,6 @@ import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.IModal;
 
 import java.awt.*;
-import java.util.Objects;
 
 public class RejectButton implements IButton, IModal {
     @Override
@@ -67,7 +67,8 @@ public class RejectButton implements IButton, IModal {
 
         String finalReasonText = reasonText;
         event.reply("Request rejected.").setEphemeral(true)
-                .flatMap(h -> Objects.requireNonNull(Main.getJda().getUserById(user.getAsString())).openPrivateChannel())
+                .flatMap(h -> Main.getJda().retrieveUserById(user.getAsString()))
+                .flatMap(User::openPrivateChannel)
                 .flatMap(c -> c.sendMessage("Your mod request was rejected. " + finalReasonText))
                 .queue();
     }
