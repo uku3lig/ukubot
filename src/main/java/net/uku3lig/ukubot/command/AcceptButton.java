@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.uku3lig.ukubot.Main;
 import net.uku3lig.ukubot.core.ButtonData;
 import net.uku3lig.ukubot.core.IButton;
+import net.uku3lig.ukubot.util.Util;
 
 import java.awt.*;
 import java.util.EnumSet;
@@ -24,7 +25,7 @@ public class AcceptButton implements IButton {
     public void onButtonClick(ButtonInteractionEvent event) {
         if (event.getGuild() == null) return;
 
-        EmbedBuilder builder = new EmbedBuilder(event.getMessage().getEmbeds().stream().findFirst().orElse(null))
+        EmbedBuilder builder = Util.getEmbed(event)
                 .setTitle("MOD REQUEST ACCEPTED")
                 .setColor(Color.GREEN);
 

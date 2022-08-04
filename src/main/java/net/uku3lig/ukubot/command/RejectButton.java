@@ -1,6 +1,5 @@
 package net.uku3lig.ukubot.command;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -14,6 +13,7 @@ import net.uku3lig.ukubot.Main;
 import net.uku3lig.ukubot.core.ButtonData;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.IModal;
+import net.uku3lig.ukubot.util.Util;
 
 import java.awt.*;
 
@@ -25,7 +25,7 @@ public class RejectButton implements IButton, IModal {
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {
-        MessageEmbed edited = new EmbedBuilder(event.getMessage().getEmbeds().stream().findFirst().orElse(null))
+        MessageEmbed edited = Util.getEmbed(event)
                 .setTitle("MOD REQUEST REJECTED")
                 .setColor(Color.RED)
                 .build();
