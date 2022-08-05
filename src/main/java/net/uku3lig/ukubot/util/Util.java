@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.uku3lig.ukubot.Main;
+import net.uku3lig.ukubot.command.DeleteTicketButton;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -39,6 +40,14 @@ public class Util {
         return addUserToModal(embed, modal).createCopy().addActionRow(text).build();
     }
 
+    public static TextChannel getTicket(ButtonInteractionEvent event) {
+        if (event.getGuild() == null) return null;
+
+        MessageEmbed embed = getEmbed(event).build();
+        String channelId = Optional.ofNullable(embed.getDescription()).orElse("0").replaceAll("\\D+", "");
+        return event.getGuild().getTextChannelById(channelId);
+    }
+
     @CheckReturnValue
     public static RestAction<?> sendRejectionToUser(ModalInteractionEvent event, String action, @Nullable final String reason) {
         ModalMapping user = event.getValue("user");
@@ -65,7 +74,7 @@ public class Util {
 
         return after.flatMap(v -> channel.getManager().setParent(category).setName(channel.getName() + "-" + action))
                 .flatMap(v -> channel.getManager().sync())
-                .flatMap(v -> event.getHook().editOriginalEmbeds(embed).setActionRows())
+                .flatMap(v -> event.getHook().editOriginalEmbeds(embed).setActionRow(new DeleteTicketButton().getButton()))
                 .flatMap(v -> event.getHook().sendMessage("Closed ticket.").setEphemeral(true));
     }
 

@@ -61,6 +61,9 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
         if (Boolean.TRUE.equals(Main.getGuildConfig(event.getGuild()).getOrElse("requests_open", true)))
             event.replyModal(getModal()).queue();
         else event.reply("Requests are closed, please retry later.").setEphemeral(true).queue();
+
+        // TODO blacklist
+        // TODO delay between submissions
     }
 
     @Override
