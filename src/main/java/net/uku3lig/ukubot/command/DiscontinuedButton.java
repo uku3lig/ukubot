@@ -41,13 +41,15 @@ public class DiscontinuedButton implements IButton, IModal {
 
     @Override
     public void onModal(ModalInteractionEvent event) {
-        String reasonText = "";
+        String reasonText;
         ModalMapping modalReason = event.getValue("reason");
 
         if (modalReason != null && !modalReason.getAsString().isEmpty() && !modalReason.getAsString().isBlank()) {
             reasonText = "Reason: " + modalReason.getAsString();
+        } else {
+            reasonText = "";
         }
 
-        Util.sendRejectionToUser(event, "discontinued", reasonText).queue();
+        event.deferReply(true).flatMap(v -> Util.sendRejectionToUser(event, "discontinued", reasonText)).queue();
     }
 }

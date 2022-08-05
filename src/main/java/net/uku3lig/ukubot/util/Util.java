@@ -44,7 +44,7 @@ public class Util {
         return Main.getJda().retrieveUserById(user.getAsString())
                 .flatMap(User::openPrivateChannel)
                 .flatMap(c -> c.sendMessageFormat("Your mod request was %s. %s", action, reason))
-                .flatMap(m -> event.replyFormat("Mod request %s.", action).setEphemeral(true));
+                .flatMap(m -> event.getHook().sendMessageFormat("Mod request %s.", action).setEphemeral(true));
     }
 
     @CheckReturnValue

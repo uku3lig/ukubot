@@ -45,13 +45,15 @@ public class RejectButton implements IButton, IModal {
 
     @Override
     public void onModal(ModalInteractionEvent event) {
-        String reasonText = "No reason was provided.";
+        String reasonText;
         ModalMapping modalReason = event.getValue("reject_reason");
 
         if (modalReason != null && !modalReason.getAsString().isEmpty() && !modalReason.getAsString().isBlank()) {
             reasonText = "Reason: " + modalReason.getAsString();
+        } else {
+            reasonText = "No reason was provided.";
         }
 
-        Util.sendRejectionToUser(event, "rejected", reasonText).queue();
+        event.deferReply(true).flatMap(v -> Util.sendRejectionToUser(event, "rejected", reasonText)).queue();
     }
 }
