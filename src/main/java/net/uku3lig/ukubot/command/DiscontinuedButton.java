@@ -23,8 +23,6 @@ public class DiscontinuedButton implements IButton, IModal {
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {
-        if (event.getGuild() == null) return;
-
         MessageEmbed edited = Util.getEmbed(event)
                 .setColor(0xff7a1e0d)
                 .setTitle("MOD REQUEST DISCONTINUED")

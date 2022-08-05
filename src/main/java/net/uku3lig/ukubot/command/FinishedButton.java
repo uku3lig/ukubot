@@ -23,8 +23,6 @@ public class FinishedButton implements IButton, IModal {
 
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {
-        if (event.getGuild() == null) return;
-
         MessageEmbed edited = Util.getEmbed(event)
                 .setColor(0xff41b1b5)
                 .setTitle("MOD REQUEST FINISHED")
