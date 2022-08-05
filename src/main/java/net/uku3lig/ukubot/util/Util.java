@@ -32,12 +32,15 @@ public class Util {
         return builder.build();
     }
 
-    public static Modal addInfoToModal(MessageEmbed embed, Message message, Modal modal) {
+    public static Modal addInfoToModal(ButtonInteractionEvent event, MessageEmbed embed, Message message, Modal modal) {
         TextInput text = TextInput.create("message_id", "Message ID", TextInputStyle.SHORT)
                 .setValue(message.getId())
                 .build();
+        TextInput url = TextInput.create("message_url", "Message url", TextInputStyle.SHORT)
+                .setValue(event.getMessage().getJumpUrl())
+                .build();
 
-        return addUserToModal(embed, modal).createCopy().addActionRow(text).build();
+        return addUserToModal(embed, modal).createCopy().addActionRow(text).addActionRow(url).build();
     }
 
     public static TextChannel getTicket(ButtonInteractionEvent event) {

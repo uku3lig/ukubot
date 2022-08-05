@@ -42,7 +42,7 @@ public class FinishedButton implements IButton, IModal {
         }
 
         channel.sendMessageEmbeds(edited)
-                .map(m -> Util.addInfoToModal(edited, m, getModal()))
+                .map(m -> Util.addInfoToModal(event, edited, m, getModal()))
                 .flatMap(m -> Util.closeTicket(event, "finished", edited, event.replyModal(m)))
                 .queue();
     }
@@ -69,6 +69,7 @@ public class FinishedButton implements IButton, IModal {
         String link = Objects.requireNonNull(event.getValue("mod_link")).getAsString();
         String amount = Objects.requireNonNull(event.getValue("mod_received")).getAsString();
         String msgID = Optional.ofNullable(event.getValue("message_id")).map(ModalMapping::getAsString).orElse("0");
+        String msgUrl = Objects.requireNonNull(event.getValue("message_url")).getAsString();
 
         Config config = Main.getGuildConfig(event.getGuild());
 
@@ -79,7 +80,8 @@ public class FinishedButton implements IButton, IModal {
                 .flatMap(m -> {
                     EmbedBuilder builder = new EmbedBuilder(m.getEmbeds().stream().findFirst().orElse(null))
                             .addField("link", link, false)
-                            .addField("received", amount, false);
+                            .addField("received", amount, false)
+                            .addField("original request", "[link]("+msgUrl+")", false);
                     return m.editMessageEmbeds(builder.build());
                 })
                 .queue();
