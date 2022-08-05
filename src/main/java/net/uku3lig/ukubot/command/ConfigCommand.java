@@ -19,17 +19,19 @@ public class ConfigCommand implements ICommand {
     @Override
     public CommandData getCommandData() {
         SubcommandData formChannel = new SubcommandData("formchannel", "sets the channel in which the form results are sent")
-                .addOption(OptionType.CHANNEL, "channel", "the channel", true);
+                .addOption(OptionType.CHANNEL, "channel", "the channel");
         SubcommandData requestsOpen = new SubcommandData("requestsopen", "sets if requests are open")
-                .addOption(OptionType.BOOLEAN, "open", "the state of requests", true);
+                .addOption(OptionType.BOOLEAN, "open", "the state of requests");
         SubcommandData ticketCategory = new SubcommandData("ticketcategory", "sets the category in which tickets are created")
-                .addOption(OptionType.CHANNEL, "category", "the category id");
+                .addOption(OptionType.CHANNEL, "category", "the category");
         SubcommandData closedCategory = new SubcommandData("closedcategory", "sets the category in which closed tickets are put")
                 .addOption(OptionType.CHANNEL, "category", "the category");
+        SubcommandData finishedChannel = new SubcommandData("finishedchannel", "sets the channel in which finished mods are sent")
+                .addOption(OptionType.CHANNEL, "channel", "the channel");
 
         return Commands.slash("config", "configures the bot to your liking")
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
-                .addSubcommands(formChannel, requestsOpen, ticketCategory, closedCategory);
+                .addSubcommands(formChannel, requestsOpen, ticketCategory, closedCategory, finishedChannel);
     }
 
     @Override
@@ -77,6 +79,17 @@ public class ConfigCommand implements ICommand {
                     event.replyFormat("Closed tickets category set to `%s`.", category.getName()).setEphemeral(true).queue();
                 } else {
                     event.reply("Not a category.").setEphemeral(true).queue();
+                }
+            }
+            case "finishedchannel" -> {
+                OptionMapping option = Objects.requireNonNull(event.getOption("channel"));
+                GuildChannelUnion channel = option.getAsChannel();
+
+                if (channel instanceof TextChannel textChannel) {
+                    Main.editGuildConfig(event.getGuild(), cfg -> cfg.set("finished_channel", textChannel.getIdLong()));
+                    event.replyFormat("Set finished mods channel to %s.", textChannel.getAsMention()).setEphemeral(true).queue();
+                } else {
+                    event.reply("Not a text channel.").setEphemeral(true).queue();
                 }
             }
             default -> event.reply("Unknown setting.").setEphemeral(true).queue();

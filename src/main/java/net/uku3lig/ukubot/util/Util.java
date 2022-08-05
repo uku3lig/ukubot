@@ -1,10 +1,7 @@
 package net.uku3lig.ukubot.util;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Category;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ComponentInteraction;
@@ -32,6 +29,14 @@ public class Util {
         if (info != null) builder.addActionRow(text.setValue(info.getText()).build());
 
         return builder.build();
+    }
+
+    public static Modal addInfoToModal(MessageEmbed embed, Message message, Modal modal) {
+        TextInput text = TextInput.create("message_id", "Message ID", TextInputStyle.SHORT)
+                .setValue(message.getId())
+                .build();
+
+        return addUserToModal(embed, modal).createCopy().addActionRow(text).build();
     }
 
     @CheckReturnValue
