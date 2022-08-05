@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.uku3lig.ukubot.Main;
-import net.uku3lig.ukubot.core.ButtonData;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.util.Util;
 
@@ -17,8 +16,8 @@ import java.util.Optional;
 
 public class AcceptButton implements IButton {
     @Override
-    public ButtonData getButtonData() {
-        return new ButtonData(Button.success("mod_accept", "Accept Mod"));
+    public Button getButton() {
+        return Button.success("mod_accept", "Accept Mod");
     }
 
     @Override
@@ -41,7 +40,7 @@ public class AcceptButton implements IButton {
                         .addMemberPermissionOverride(member.getIdLong(), EnumSet.of(Permission.VIEW_CHANNEL), EnumSet.noneOf(Permission.class)))
                 .flatMap(c -> c.sendMessageEmbeds(builder.build()))
                 .flatMap(m -> event.editMessageEmbeds(builder.setDescription(m.getChannel().getAsMention()).build())
-                        .setActionRow(new FinishedButton().getButton(event.getGuild()), new DiscontinuedButton().getButton(event.getGuild())))
+                        .setActionRow(new FinishedButton().getButton(), new DiscontinuedButton().getButton()))
                 .queue();
     }
 }

@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
-import net.uku3lig.ukubot.core.ButtonData;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.IModal;
 import net.uku3lig.ukubot.util.Util;
@@ -17,8 +16,8 @@ import java.awt.*;
 
 public class RejectButton implements IButton, IModal {
     @Override
-    public ButtonData getButtonData() {
-        return new ButtonData(Button.danger("mod_reject", "Reject Mod"));
+    public Button getButton() {
+        return Button.danger("mod_reject", "Reject Mod");
     }
 
     @Override

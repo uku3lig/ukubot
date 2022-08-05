@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.uku3lig.ukubot.core.ButtonData;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.IModal;
 import net.uku3lig.ukubot.util.Util;
@@ -18,8 +17,8 @@ import java.util.Optional;
 
 public class FinishedButton implements IButton, IModal {
     @Override
-    public ButtonData getButtonData() {
-        return new ButtonData(Button.primary("mod_finished", "Mark as finished"));
+    public Button getButton() {
+        return Button.primary("mod_finished", "Mark as finished");
     }
 
     @Override

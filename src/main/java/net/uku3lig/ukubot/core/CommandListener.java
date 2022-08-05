@@ -46,7 +46,7 @@ public class CommandListener extends ListenerAdapter {
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getGuild() == null) return;
         buttons.stream()
-                .filter(b -> Objects.equals(b.getButtonData().getButton(event.getGuild()).getId(), event.getButton().getId()))
+                .filter(b -> Objects.equals(b.getButton().getId(), event.getButton().getId()))
                 .forEach(b -> b.onButtonClick(event));
     }
 }

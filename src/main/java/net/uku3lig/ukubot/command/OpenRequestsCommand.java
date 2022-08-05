@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.uku3lig.ukubot.Main;
-import net.uku3lig.ukubot.core.ButtonData;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.ICommand;
 import net.uku3lig.ukubot.core.IModal;
@@ -46,15 +45,14 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
                 .setDescription("Click the button below to request a mod or plugin.");
 
         event.getMessageChannel().sendMessageEmbeds(builder.build())
-                .setActionRow(getButton(event.getGuild()))
+                .setActionRow(getButton())
                 .flatMap(m -> event.reply("Created.").setEphemeral(true))
                 .queue();
     }
 
     @Override
-    public ButtonData getButtonData() {
-        return new ButtonData(Button.success("open_mod_request", "Open Mod Request")
-                .withEmoji(Emoji.fromUnicode("\uD83D\uDCD1")));
+    public Button getButton() {
+        return Button.success("open_mod_request", "Open Mod Request").withEmoji(Emoji.fromUnicode("\uD83D\uDCD1"));
     }
 
     @Override
@@ -114,7 +112,7 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
                 .forEach(m -> builder.addField(m.getId(), m.getAsString(), false));
 
         channel.sendMessageEmbeds(builder.build())
-                .setActionRow(new AcceptButton().getButton(event.getGuild()), new RejectButton().getButton(event.getGuild()))
+                .setActionRow(new AcceptButton().getButton(), new RejectButton().getButton())
                 .flatMap(m -> event.reply("Thanks for your submission. You will receive a reply shortly.").setEphemeral(true))
                 .queue();
     }
