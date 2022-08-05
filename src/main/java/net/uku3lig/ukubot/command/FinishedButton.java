@@ -1,7 +1,6 @@
 package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.Modal;
@@ -13,7 +12,6 @@ import net.uku3lig.ukubot.core.IModal;
 import net.uku3lig.ukubot.util.Util;
 
 import java.util.Objects;
-import java.util.Optional;
 
 public class FinishedButton implements IButton, IModal {
     @Override
@@ -28,18 +26,7 @@ public class FinishedButton implements IButton, IModal {
                 .setTitle("MOD REQUEST FINISHED")
                 .build();
 
-        String channelId = Optional.ofNullable(edited.getDescription()).orElse("0").replaceAll("\\D+", "");
-        TextChannel channel = event.getGuild().getTextChannelById(channelId);
-        if (channel == null) {
-            event.reply("Unknown channel.").setEphemeral(true).queue();
-            return;
-        }
-
-        event.replyModal(Util.addUserToModal(edited, getModal()))
-                .flatMap(v -> channel.getManager().sync())
-                .flatMap(v -> event.editMessageEmbeds(edited).setActionRows())
-                .flatMap(v -> event.getHook().sendMessage("Closed ticket for being finished.").setEphemeral(true))
-                .queue();
+        Util.closeTicket(event, "finished", edited, event.replyModal(Util.addUserToModal(edited, getModal()))).queue();
     }
 
     @Override

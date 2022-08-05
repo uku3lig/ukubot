@@ -24,10 +24,12 @@ public class ConfigCommand implements ICommand {
                 .addOption(OptionType.BOOLEAN, "open", "the state of requests", true);
         SubcommandData ticketCategory = new SubcommandData("ticketcategory", "sets the category in which tickets are created")
                 .addOption(OptionType.CHANNEL, "category", "the category id");
+        SubcommandData closedCategory = new SubcommandData("closedcategory", "sets the category in which closed tickets are put")
+                .addOption(OptionType.CHANNEL, "category", "the category");
 
         return Commands.slash("config", "configures the bot to your liking")
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
-                .addSubcommands(formChannel, requestsOpen, ticketCategory);
+                .addSubcommands(formChannel, requestsOpen, ticketCategory, closedCategory);
     }
 
     @Override
@@ -62,6 +64,17 @@ public class ConfigCommand implements ICommand {
                 if (channel instanceof Category category) {
                     Main.editGuildConfig(event.getGuild(), cfg -> cfg.set("ticket_category", category.getIdLong()));
                     event.replyFormat("Ticket category set to `%s`.", category.getName()).setEphemeral(true).queue();
+                } else {
+                    event.reply("Not a category.").setEphemeral(true).queue();
+                }
+            }
+            case "closedcategory" -> {
+                OptionMapping option = Objects.requireNonNull(event.getOption("category"));
+                GuildChannelUnion channel = option.getAsChannel();
+
+                if (channel instanceof Category category) {
+                    Main.editGuildConfig(event.getGuild(), cfg -> cfg.set("closed_category", category.getIdLong()));
+                    event.replyFormat("Closed tickets category set to `%s`.", category.getName()).setEphemeral(true).queue();
                 } else {
                     event.reply("Not a category.").setEphemeral(true).queue();
                 }

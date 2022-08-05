@@ -1,7 +1,6 @@
 package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.Modal;
@@ -12,8 +11,6 @@ import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.IModal;
 import net.uku3lig.ukubot.util.Util;
-
-import java.util.Optional;
 
 public class DiscontinuedButton implements IButton, IModal {
     @Override
@@ -28,20 +25,7 @@ public class DiscontinuedButton implements IButton, IModal {
                 .setTitle("MOD REQUEST DISCONTINUED")
                 .build();
 
-        String channelId = Optional.ofNullable(edited.getDescription()).orElse("0").replaceAll("\\D+", "");
-        TextChannel channel = event.getGuild().getTextChannelById(channelId);
-        if (channel == null) {
-            event.reply("Unknown channel.").setEphemeral(true).queue();
-            return;
-        }
-
-        event.replyModal(Util.addUserToModal(edited, getModal()))
-                .flatMap(v -> channel.getManager().sync())
-                .flatMap(v -> event.getHook().editOriginalEmbeds(edited).setActionRows())
-                .flatMap(v -> event.getHook().sendMessage("Closed ticket for being discontinued.").setEphemeral(true))
-                .queue();
-
-        // TODO closed tickets category
+        Util.closeTicket(event, "discontinued", edited, event.replyModal(Util.addUserToModal(edited, getModal()))).queue();
     }
 
     @Override
