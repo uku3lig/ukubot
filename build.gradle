@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
     id "io.freefair.lombok" version "6.5.0.3"
 }
 
@@ -24,10 +25,7 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'net.uku3lig.ukubot.Main'
-        )
-    }
+// use 'gradle --console plain run' to run
+application {
+    mainClass = 'net.uku3lig.ukubot.Main'
 }
