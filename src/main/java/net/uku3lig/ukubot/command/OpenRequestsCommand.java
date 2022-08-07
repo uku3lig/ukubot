@@ -42,7 +42,13 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setTitle("Request a mod/plugin")
-                .setDescription("Click the button below to request a mod or plugin.");
+                .setDescription("Click the button below to request a mod or plugin.")
+                .addField("‼️ Do not request an already made mod/plugin!", "Please make sure to double check my [Modrinth page](https://modrinth.com/user/uku3lig) to see what is already available.", false)
+                .addField("📚 Make sure to read the terms", "They are subject to be updated at any time, so please check them everytime you request something.", false)
+                .addField("🈲 Do not troll", "This one should be common sense, but we never know.", false)
+                .addField("🛑 Failure to respect those rules exposes you to being permanently blacklisted from requesting.", " - uku", false)
+                .setColor(0xFF9b59b6) // light purple
+                .setFooter("ukubot v0.6.9 (nice)", Main.getJda().getSelfUser().getEffectiveAvatarUrl());
 
         event.getMessageChannel().sendMessageEmbeds(builder.build())
                 .setActionRow(getButton())
@@ -52,7 +58,7 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
 
     @Override
     public Button getButton() {
-        return Button.success("open_mod_request", "Open Mod Request").withEmoji(Emoji.fromUnicode("\uD83D\uDCD1"));
+        return Button.primary("open_mod_request", "Open Mod Request").withEmoji(Emoji.fromUnicode("\uD83D\uDCD1"));
     }
 
     @Override
