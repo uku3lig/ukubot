@@ -74,24 +74,29 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
 
     @Override
     public Modal getModal() {
-        TextInput desc = TextInput.create("mod_desc", "Give a brief description of your mod", TextInputStyle.PARAGRAPH)
-                .setRequiredRange(20, 1000)
+        TextInput desc = TextInput.create("mod_desc", "Give an extended description of your mod", TextInputStyle.PARAGRAPH)
+                .setMinLength(20)
                 .setPlaceholder("A mod that counts how many potions you have in your inventory")
                 .build();
 
         TextInput amount = TextInput.create("mod_amount", "How much would you pay?", TextInputStyle.SHORT)
-                .setRequiredRange(2, 50)
+                .setMaxLength(50)
                 .setPlaceholder("15€")
+                .build();
+
+        TextInput version = TextInput.create("mod_version", "What Minecraft version do you need?", TextInputStyle.SHORT)
+                .setPlaceholder("Fabric 1.19")
                 .build();
 
         TextInput deadline = TextInput.create("mod_deadline", "(OPTIONAL) Do you have a deadline?", TextInputStyle.SHORT)
                 .setRequired(false)
-                .setRequiredRange(5, 100)
+                .setMaxLength(100)
                 .setPlaceholder("Don't say 'as soon as possible'.")
                 .build();
 
         return Modal.create("mod_form", "Mod Request Form")
                 .addActionRow(desc)
+                .addActionRow(version)
                 .addActionRow(amount)
                 .addActionRow(deadline)
                 .build();
