@@ -35,7 +35,7 @@ public class Main {
         jda = JDABuilder.createDefault(readToken())
                 .setActivity(Activity.watching("your mod requests"))
                 .addEventListeners(new CommandListener())
-                .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
                 .build()
                 .awaitReady();
 
