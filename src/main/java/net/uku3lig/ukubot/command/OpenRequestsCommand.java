@@ -20,6 +20,7 @@ import net.uku3lig.ukubot.core.ICommand;
 import net.uku3lig.ukubot.core.IModal;
 
 import java.time.Instant;
+import java.util.Collections;
 
 public class OpenRequestsCommand implements ICommand, IButton, IModal {
     @Override
@@ -64,11 +65,16 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
     @Override
     public void onButtonClick(ButtonInteractionEvent event) {
         if (event.getGuild() == null) return;
+
+        if (Main.getGuildConfig(event.getGuild()).getOrElse("blacklisted", Collections.emptyList()).contains(event.getUser().getIdLong())) {
+            event.reply("you are blacklisted from submitting requests.").setEphemeral(true).queue();
+            return;
+        }
+
         if (Boolean.TRUE.equals(Main.getGuildConfig(event.getGuild()).getOrElse("requests_open", true)))
             event.replyModal(getModal()).queue();
         else event.reply("Requests are closed, please retry later.").setEphemeral(true).queue();
 
-        // TODO blacklist
         // TODO delay between submissions
     }
 
