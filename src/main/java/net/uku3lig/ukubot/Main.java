@@ -65,7 +65,7 @@ public class Main {
     private static String readToken() {
         if (!Files.exists(TOKEN_PATH) || !Files.isRegularFile(TOKEN_PATH)) return "";
         try {
-            return Files.readString(TOKEN_PATH, StandardCharsets.UTF_8);
+            return Files.readString(TOKEN_PATH, StandardCharsets.UTF_8).strip();
         } catch (IOException e) {
             log.warn("Could not read token file", e);
             return "";
