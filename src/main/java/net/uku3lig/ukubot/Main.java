@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.uku3lig.ukubot.core.CommandListener;
+import net.uku3lig.ukubot.core.KiyoListener;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class Main {
     public static void main(String[] args) throws LoginException, InterruptedException {
         jda = JDABuilder.createDefault(readToken())
                 .setActivity(Activity.watching("your mod requests"))
-                .addEventListeners(new CommandListener())
+                .addEventListeners(new CommandListener(), new KiyoListener())
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
                 .build()
                 .awaitReady();
