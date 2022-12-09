@@ -1,5 +1,6 @@
 package net.uku3lig.ukubot.core;
 
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public class KiyoListener extends ListenerAdapter {
         }
 
         if (event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).contains("uku")) {
-            event.getMessage().reply("<:uku:1007036728294527066>").mentionRepliedUser(false).queue();
+            event.getMessage().addReaction(Emoji.fromFormatted("<:uku:1007036728294527066>")).queue();
         }
     }
 }
