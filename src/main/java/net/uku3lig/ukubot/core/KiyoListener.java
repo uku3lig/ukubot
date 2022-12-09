@@ -9,6 +9,8 @@ import java.util.Locale;
 public class KiyoListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (event.getAuthor().isBot() || event.getAuthor().isSystem()) return;
+
         if (event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).contains("kiyohime")) {
             event.getMessage().reply("<:kiyobean:739895868215263232>").mentionRepliedUser(false).queue();
         }
