@@ -12,5 +12,9 @@ public class KiyoListener extends ListenerAdapter {
         if (event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).contains("kiyohime")) {
             event.getMessage().reply("<:kiyobean:739895868215263232>").mentionRepliedUser(false).queue();
         }
+
+        if (event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).contains("uku")) {
+            event.getMessage().reply("<:uku:1007036728294527066>").mentionRepliedUser(false).queue();
+        }
     }
 }
