@@ -16,7 +16,7 @@ public class KiyoListener extends ListenerAdapter {
             event.getMessage().reply("<:kiyobean:739895868215263232>").mentionRepliedUser(false).queue();
         }
 
-        if (event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).contains("uku")) {
+        if (event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).contains("uku3lig")) {
             event.getMessage().addReaction(Emoji.fromFormatted("<:uku:1007036728294527066>")).queue();
         }
     }
