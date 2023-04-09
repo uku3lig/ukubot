@@ -9,8 +9,10 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.uku3lig.ukubot.core.CommandListener;
 import net.uku3lig.ukubot.core.KiyoListener;
+import net.uku3lig.ukubot.core.LeagueListener;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -35,8 +37,9 @@ public class Main {
     public static void main(String[] args) throws LoginException, InterruptedException {
         jda = JDABuilder.createDefault(readToken())
                 .setActivity(Activity.watching("your mod requests"))
-                .addEventListeners(new CommandListener(), new KiyoListener())
-                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
+                .addEventListeners(new CommandListener(), new KiyoListener(), new LeagueListener())
+                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_PRESENCES)
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .build()
                 .awaitReady();
 

@@ -28,10 +28,12 @@ public class ConfigCommand implements ICommand {
                 .addOption(OptionType.CHANNEL, "category", "the category");
         SubcommandData finishedChannel = new SubcommandData("finishedchannel", "sets the channel in which finished mods are sent")
                 .addOption(OptionType.CHANNEL, "channel", "the channel");
+        SubcommandData leagueChannel = new SubcommandData("leaguechannel", "stop playing league loser")
+                .addOption(OptionType.CHANNEL, "channel", "the channel");
 
         return Commands.slash("config", "configures the bot to your liking")
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
-                .addSubcommands(formChannel, requestsOpen, ticketCategory, closedCategory, finishedChannel);
+                .addSubcommands(formChannel, requestsOpen, ticketCategory, closedCategory, finishedChannel, leagueChannel);
     }
 
     @Override
@@ -88,6 +90,17 @@ public class ConfigCommand implements ICommand {
                 if (channel instanceof TextChannel textChannel) {
                     Main.editGuildConfig(event.getGuild(), cfg -> cfg.set("finished_channel", textChannel.getIdLong()));
                     event.replyFormat("Set finished mods channel to %s.", textChannel.getAsMention()).setEphemeral(true).queue();
+                } else {
+                    event.reply("Not a text channel.").setEphemeral(true).queue();
+                }
+            }
+            case "leaguechannel" -> {
+                OptionMapping option = Objects.requireNonNull(event.getOption("channel"));
+                GuildChannelUnion channel = option.getAsChannel();
+
+                if (channel instanceof TextChannel textChannel) {
+                    Main.editGuildConfig(event.getGuild(), cfg -> cfg.set("league_channel", textChannel.getIdLong()));
+                    event.replyFormat("losers will stop playing league in %s.", textChannel.getAsMention()).setEphemeral(true).queue();
                 } else {
                     event.reply("Not a text channel.").setEphemeral(true).queue();
                 }
