@@ -44,7 +44,7 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
         EmbedBuilder builder = new EmbedBuilder()
                 .setTitle("Request a mod/plugin")
                 .setDescription("Click the button below to request a mod or plugin.")
-                .addField("‼️ Do not request an already made mod/plugin!", "Please make sure to double check my [Modrinth page](https://modrinth.com/user/uku3lig) to see what is already available.", false)
+                .addField("‼️ Do not request an already made mod/plugin!", "Please make sure to double check my [Modrinth page](https://modrinth.com/user/HiuxcjYJ) to see what is already available.", false)
                 .addField("📚 Make sure to read the terms", "They are subject to be updated at any time, so please check them everytime you request something.", false)
                 .addField("🈲 Do not troll", "This one should be common sense, but we never know.", false)
                 .addField("🛑 Failure to respect those rules exposes you to being permanently blacklisted from requesting.", " - uku", false)
