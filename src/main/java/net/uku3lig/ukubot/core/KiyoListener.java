@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Locale;
 
 public class KiyoListener extends ListenerAdapter {
@@ -21,7 +23,7 @@ public class KiyoListener extends ListenerAdapter {
             event.getMessage().addReaction(Emoji.fromFormatted("<:uku:1007036728294527066>")).queue();
         }
 
-        if (content.contains("gay")) {
+        if (content.contains("gay") && LocalDateTime.now().getMonth().equals(Month.JUNE)) {
             event.getChannel().sendMessage("<:Gayge:1107308980994318356>").queue();
         }
     }

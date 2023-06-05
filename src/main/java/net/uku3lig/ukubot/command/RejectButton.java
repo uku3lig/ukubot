@@ -34,7 +34,7 @@ public class RejectButton implements IButton, IModal {
 
     @Override
     public Modal getModal() {
-        TextInput reason = TextInput.create("reject_reason", "Rejection reason", TextInputStyle.SHORT)
+        TextInput reason = TextInput.create("reject_reason", "Rejection reason", TextInputStyle.PARAGRAPH)
                 .setRequired(false)
                 .build();
 
