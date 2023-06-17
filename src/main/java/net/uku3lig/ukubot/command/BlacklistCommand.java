@@ -45,11 +45,11 @@ public class BlacklistCommand implements ICommand {
             switch (event.getSubcommandName()) {
                 case "add" -> {
                     ids.add(u.getIdLong());
-                    event.replyFormat("Added %s to the blacklist.", u.getAsTag()).setEphemeral(true).queue();
+                    event.replyFormat("Added %s to the blacklist.", u.getName()).setEphemeral(true).queue();
                 }
                 case "remove" -> {
                     ids.remove(u.getIdLong());
-                    event.replyFormat("Removed %s from the blacklist.", u.getAsTag()).setEphemeral(true).queue();
+                    event.replyFormat("Removed %s from the blacklist.", u.getName()).setEphemeral(true).queue();
                 }
                 default -> event.reply("unknown subcommand").setEphemeral(true).queue();
             }

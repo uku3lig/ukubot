@@ -2,8 +2,8 @@ package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.uku3lig.ukubot.Main;
@@ -36,7 +36,7 @@ public class AcceptButton implements IButton {
 
         Optional<String> opt = Optional.ofNullable(builder.build().getFooter()).map(MessageEmbed.Footer::getText);
         event.getGuild().retrieveMemberById(opt.orElse("0"))
-                .flatMap(member -> category.createTextChannel(member.getUser().getAsTag())
+                .flatMap(member -> category.createTextChannel(member.getUser().getName())
                         .addMemberPermissionOverride(member.getIdLong(), EnumSet.of(Permission.VIEW_CHANNEL), EnumSet.noneOf(Permission.class)))
                 .flatMap(c -> c.sendMessageEmbeds(builder.build()))
                 .flatMap(m -> event.editMessageEmbeds(builder.setDescription(m.getChannel().getAsMention()).build())

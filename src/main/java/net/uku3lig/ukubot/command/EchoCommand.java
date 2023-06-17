@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.utils.AllowedMentions;
 import net.uku3lig.ukubot.core.ICommand;
 
 import java.util.EnumSet;
@@ -27,7 +26,8 @@ public class EchoCommand implements ICommand {
         OptionMapping mapping = event.getOption("text");
         if (mapping == null) return;
 
-        event.getMessageChannel().sendMessage(mapping.getAsString()).allowedMentions(allowed)
+        event.getMessageChannel().sendMessage(mapping.getAsString())
+                .setAllowedMentions(allowed)
                 .flatMap(m -> event.reply("sent!").setEphemeral(true))
                 .queue();
     }

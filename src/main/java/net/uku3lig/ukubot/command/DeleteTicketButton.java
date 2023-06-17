@@ -1,7 +1,7 @@
 package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.uku3lig.ukubot.core.IButton;
@@ -28,7 +28,7 @@ public class DeleteTicketButton implements IButton {
         }
 
         channel.delete()
-                .flatMap(v -> event.editMessageEmbeds(embed).setActionRows())
+                .flatMap(v -> event.editMessageEmbeds(embed).setActionRow())
                 .flatMap(v -> event.getHook().sendMessage("Deleted ticket.").setEphemeral(true)).queue();
     }
 }

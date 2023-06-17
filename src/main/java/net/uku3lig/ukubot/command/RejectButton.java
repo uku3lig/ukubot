@@ -3,10 +3,10 @@ package net.uku3lig.ukubot.command;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.IModal;
@@ -28,7 +28,7 @@ public class RejectButton implements IButton, IModal {
                 .build();
 
         event.replyModal(Util.addUserToModal(edited, getModal()))
-                .flatMap(v -> event.getHook().editOriginalEmbeds(edited).setActionRows())
+                .flatMap(v -> event.getHook().editOriginalEmbeds(edited).setActionRow())
                 .queue();
     }
 

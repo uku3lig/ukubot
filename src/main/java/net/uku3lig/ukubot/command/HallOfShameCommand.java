@@ -32,7 +32,7 @@ public class HallOfShameCommand implements ICommand {
         }
 
         RestAction.allOf(ids.stream().map(Main.getJda()::retrieveUserById).toList())
-                .map(l -> String.join(" ", l.stream().map(User::getAsTag).toList()))
+                .map(l -> String.join(" ", l.stream().map(User::getName).toList()))
                 .flatMap(s -> event.replyFormat("blacklisted mfs:%n%s", s).setEphemeral(ephemeral))
                 .queue();
     }

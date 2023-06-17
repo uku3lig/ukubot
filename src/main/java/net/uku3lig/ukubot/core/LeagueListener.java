@@ -1,7 +1,7 @@
 package net.uku3lig.ukubot.core;
 
 import com.electronwill.nightconfig.core.Config;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.uku3lig.ukubot.Main;

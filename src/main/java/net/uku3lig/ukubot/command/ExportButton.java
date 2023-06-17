@@ -2,9 +2,10 @@ package net.uku3lig.ukubot.command;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.FileUpload;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.util.Util;
 
@@ -48,7 +49,7 @@ public class ExportButton implements IButton {
                 byte[] content = builder.toString().getBytes(StandardCharsets.UTF_8);
 
                 owner.getUser().openPrivateChannel()
-                        .flatMap(c -> c.sendMessageFormat("Log exports for " + channel.getName()).addFile(content, title))
+                        .flatMap(c -> c.sendMessageFormat("Log exports for " + channel.getName()).addFiles(FileUpload.fromData(content, title)))
                         .flatMap(m -> {
                             String url = m.getAttachments().get(0).getUrl();
                             return event.getHook().editOriginalEmbeds(embed.addField("export", url, false).build());

@@ -14,7 +14,6 @@ import net.uku3lig.ukubot.core.CommandListener;
 import net.uku3lig.ukubot.core.KiyoListener;
 import net.uku3lig.ukubot.core.LeagueListener;
 
-import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -34,7 +33,7 @@ public class Main {
     @Getter
     private static FileConfig config;
 
-    public static void main(String[] args) throws LoginException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         jda = JDABuilder.createDefault(readToken())
                 .setActivity(Activity.watching("your mod requests"))
                 .addEventListeners(new CommandListener(), new KiyoListener(), new LeagueListener())

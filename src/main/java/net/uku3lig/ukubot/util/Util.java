@@ -2,12 +2,14 @@ package net.uku3lig.ukubot.util;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ComponentInteraction;
-import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.uku3lig.ukubot.Main;
@@ -90,7 +92,7 @@ public class Util {
 
         // header
         printer.print("[" + m.getTimeCreated() + "] ");
-        printer.print(m.getAuthor().getAsTag());
+        printer.print(m.getAuthor().getName());
         if (m.isPinned()) printer.print(" (pinned)");
         printer.println();
 

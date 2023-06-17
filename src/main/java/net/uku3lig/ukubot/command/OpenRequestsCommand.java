@@ -2,7 +2,7 @@ package net.uku3lig.ukubot.command;
 
 import com.electronwill.nightconfig.core.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
@@ -10,10 +10,10 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.uku3lig.ukubot.Main;
 import net.uku3lig.ukubot.core.IButton;
 import net.uku3lig.ukubot.core.ICommand;
@@ -121,7 +121,7 @@ public class OpenRequestsCommand implements ICommand, IButton, IModal {
         }
 
         EmbedBuilder builder = new EmbedBuilder()
-                .setAuthor(event.getUser().getAsTag(), null, event.getUser().getEffectiveAvatarUrl())
+                .setAuthor(event.getUser().getName(), null, event.getUser().getEffectiveAvatarUrl())
                 .setFooter(event.getUser().getId())
                 .setTimestamp(Instant.now());
 
