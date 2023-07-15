@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'application'
-    id "io.freefair.lombok" version "6.5.0.3"
+
+    id "io.freefair.lombok" version "8.1.0"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group 'net.uku3lig'
@@ -12,20 +13,15 @@ repositories {
 }
 
 dependencies {
-    implementation("net.dv8tion:JDA:5.0.0-beta.10") {
+    implementation("net.dv8tion:JDA:5.0.0-beta.12") {
         exclude module: 'opus-java'
     }
-    implementation 'org.slf4j:slf4j-api:2.0.5'
-    implementation 'ch.qos.logback:logback-classic:1.4.7'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'ch.qos.logback:logback-classic:1.4.8'
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'com.electronwill.night-config:toml:3.6.6'
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-}
-
-// use 'gradle --console plain run' to run
-application {
-    mainClass = 'net.uku3lig.ukubot.Main'
 }
