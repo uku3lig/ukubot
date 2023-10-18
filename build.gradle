@@ -1,7 +1,8 @@
 plugins {
     id 'java'
+    id 'application'
 
-    id "io.freefair.lombok" version "8.1.0"
+    id "io.freefair.lombok" version "8.4"
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
@@ -20,6 +21,10 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.8'
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'com.electronwill.night-config:toml:3.6.6'
+}
+
+application {
+    mainClass = "net.uku3lig.ukubot.Main"
 }
 
 tasks.withType(JavaCompile).configureEach {
