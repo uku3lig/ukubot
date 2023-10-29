@@ -28,7 +28,7 @@ public class DeleteTicketButton implements IButton {
         }
 
         channel.delete()
-                .flatMap(v -> event.editMessageEmbeds(embed).setActionRow())
+                .flatMap(v -> event.editMessageEmbeds(embed).setComponents())
                 .flatMap(v -> event.getHook().sendMessage("Deleted ticket.").setEphemeral(true)).queue();
     }
 }

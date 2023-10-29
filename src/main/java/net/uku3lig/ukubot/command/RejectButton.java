@@ -28,7 +28,7 @@ public class RejectButton implements IButton, IModal {
                 .build();
 
         event.replyModal(Util.addUserToModal(edited, getModal()))
-                .flatMap(v -> event.getHook().editOriginalEmbeds(edited).setActionRow())
+                .flatMap(v -> event.getHook().editOriginalEmbeds(edited).setComponents())
                 .queue();
     }
 
